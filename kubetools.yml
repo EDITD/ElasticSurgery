@@ -1,0 +1,43 @@
+name: elasticsurgery
+minKubetoolsVersion: 7.0
+
+containerContexts:
+  elasticsurgery:
+    build:
+      dockerfile: docker/Dockerfile
+    dev:
+      volumes:
+        - ./:/opt/elasticsurgery
+
+tests:
+  - name: Run pytest
+    containerContext: elasticsurgery
+    command: [pytest]
+
+deployments:
+  elasticsurgery:
+    containers:
+      webserver:
+        command: [uwsgi, --ini, /etc/uwsgi.conf]
+        containerContext: elasticsurgery
+        ports:
+          - 80
+        probes:
+          httpGet:
+            path: /ping
+        dev:
+          command: [./backend/boot.py]
+
+dependencies:
+  elasticsearch:
+    # Dev only
+    conditions:
+      dev: true
+    containers:
+      elasticsearch:
+        image: elasticsearch:6.8.3
+        ports:
+          - 9200
+        probes:
+          exec:
+            command: [curl, 'elasticsurgery-elasticsearch:9200']
