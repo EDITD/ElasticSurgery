@@ -1,2 +1,6 @@
 frontend/node_modules
+<<<<<<< HEAD
 .kubetools
+=======
+.kubetools
+>>>>>>> 3d66860b4718698494d516580d284197af6efd04
