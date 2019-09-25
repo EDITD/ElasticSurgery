@@ -1,10 +1,12 @@
 import React from 'react';
 import './App.css';
 import { AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemText } from '@material-ui/core';
+import { Provider } from 'react-redux';
 
 import ShardsDashboard from './ShardsDashboard.jsx'
 import NodesDashboard from './NodesDashboard.jsx'
 import Settings from './Settings.jsx'
+import store from './data/store';
 
 class App extends React.Component {
     state = {
@@ -60,33 +62,35 @@ class App extends React.Component {
         const ComponentToRender = this.content.find(components => components.name === this.state.selectedContent).component;
 
         return (
-            <div className="App">
-                <AppBar position="static" style={this.styles.appBar}>
-                  <Toolbar>
-                    <Typography component="h1" variant="h6" color="inherit" noWrap>
-                      ElasticSurgery - Dashboard
-                    </Typography>
-                  </Toolbar>
-                </AppBar>
-                <Drawer
-                    variant="permanent"
-                    open={true}
-                    style={this.styles.drawer}
-                  >
-                  <div style={this.styles.drawer}>
-                    <List>
-                        {this.content.map(item => (
-                          <ListItem button key={item.name} onClick={() => this.menuClick(item.name)}>
-                              <ListItemText primary={item.name} />
-                         </ListItem>
-                        ))}
-                    </List>
-                </div>
-              </Drawer>
-              <main>
-                  <ComponentToRender />
-              </main>
-        </div>
+			<Provider store={store}>
+				<div className="App">
+					<AppBar position="static" style={this.styles.appBar}>
+					  <Toolbar>
+						<Typography component="h1" variant="h6" color="inherit" noWrap>
+						  ElasticSurgery - Dashboard
+						</Typography>
+					  </Toolbar>
+					</AppBar>
+					<Drawer
+						variant="permanent"
+						open={true}
+						style={this.styles.drawer}
+					  >
+					  <div style={this.styles.drawer}>
+						<List>
+							{this.content.map(item => (
+							  <ListItem button key={item.name} onClick={() => this.menuClick(item.name)}>
+								  <ListItemText primary={item.name} />
+							 </ListItem>
+							))}
+						</List>
+					</div>
+				  </Drawer>
+				  <main>
+					  <ComponentToRender />
+				  </main>
+			</div>
+		</Provider>
     );
     }
 }
