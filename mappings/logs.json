@@ -1,0 +1,17 @@
+{
+    "log": {
+        "dynamic": "strict",
+        "properties": {
+            "type": {
+                "type": "keyword"
+            },
+            "data": {
+                "type": "object"
+            },
+            "datetime_utc": {
+                "type": "date"
+            }
+        }
+    }
+}
+
