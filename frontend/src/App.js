@@ -18,7 +18,7 @@ class App extends React.Component {
 
     drawerWidth = 240;
     styles = {
-        appBar: {
+        content: {
           width: `calc(100% - ${this.drawerWidth}px)`,
           marginLeft: this.drawerWidth,
         },
@@ -61,7 +61,7 @@ class App extends React.Component {
 
         return (
             <div className="App">
-                <AppBar position="static" style={this.styles.appBar}>
+                <AppBar position="static" style={this.styles.content}>
                   <Toolbar>
                     <Typography component="h1" variant="h6" color="inherit" noWrap>
                       ElasticSurgery - Dashboard
@@ -83,7 +83,7 @@ class App extends React.Component {
                     </List>
                 </div>
               </Drawer>
-              <main>
+              <main style={this.styles.content}>
                   <ComponentToRender />
               </main>
         </div>
