@@ -11,7 +11,7 @@ export function loadNodes() {
         });
 
         try {
-            const response = await fetch('_cluster/state/nodes');
+            const response = await fetch('/api/clusters/local_development_cluster/state/nodes');
             if (response.ok) {
                 const data = await response.json();
                 dispatch({
