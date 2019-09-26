@@ -4,6 +4,7 @@ from elasticsurgery.app import app
 from elasticsurgery.views import (  # noqa: F401
     clusters_config,
     clusters_proxy,
+    error,
     indices_proxy,
 )
 
