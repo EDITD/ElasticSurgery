@@ -47,10 +47,8 @@ class ShardsDashboard extends React.Component {
     getContainerStyles(dataLoaded) {
         return {
             display: 'flex',
-            margin: '0 auto',
-            width: 'calc(100% - 240px)',
+            width: '100%',
             height: '100vh',
-            marginLeft: 240,
             alignItems: 'flex-start',
             justifyContent: dataLoaded ? 'flex-start' : 'center',
         };
@@ -77,6 +75,8 @@ class ShardsDashboard extends React.Component {
                 title: 'Index',
                 dataKey: 'index',
                 width: 300,
+                searchable: true,
+                sortable: true,
             },
             {
                 title: 'Shard #',
@@ -92,16 +92,21 @@ class ShardsDashboard extends React.Component {
             {
                 title: 'State',
                 dataKey: 'state',
-                width: 200,
+                width: 300,
+                searchable: true,
+                sortable: true,
             },
             {
                 title: 'Node',
                 dataKey: 'node',
                 flexGrow: 1,
+                width: 300,
                 formatter: nodeId => {
                     const nodeData = nodes.data.nodes[nodeId];
                     return nodeData ? nodeData.name : nodeId;
-                }
+                },
+                searchable: true,
+                sortable: true,
             },
         ];
 

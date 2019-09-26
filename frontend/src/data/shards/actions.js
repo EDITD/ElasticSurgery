@@ -11,8 +11,7 @@ export function loadShardStatus() {
         });
 
         try {
-            // const response = await fetch('/api/state/<cluster_slug>/routing_table')
-            const response = await fetch('_cluster/state/routing_table');
+            const response = await fetch('/api/clusters/local_development_cluster/state/routing_table');
             if (response.ok) {
                 const data = await response.json();
                 dispatch({
