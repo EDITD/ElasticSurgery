@@ -17,4 +17,4 @@ def get_index(cluster_client, index_name):
 def put_index(cluster_client, index_name):
     index_data = get_request_data()
     new_index_data = cluster_client.indices.create(index_name, body=index_data)
-    return jsonify(updated=True, **new_index_data)
+    return jsonify(**new_index_data)

@@ -24,7 +24,9 @@ def get_cluster_settings(cluster_client):
 def put_cluster_settings(cluster_client):
     settings = get_request_data()
     new_settings = cluster_client.cluster.put_settings(body=settings)
-    return jsonify(updated=True, **new_settings)
+    return jsonify(**new_settings)
+
+
 @app.route('/api/clusters/<cluster_slug>/tasks', methods=('GET',))
 @pass_cluster_client
 def get_cluster_tasks(cluster_client):
