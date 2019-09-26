@@ -3,10 +3,12 @@
         "dynamic": "strict",
         "properties": {
             "name": {
-                "type": "keyword"
+                "type": "keyword",
+                "index": false
             },
             "base_url": {
-                "type": "keyword"
+                "type": "keyword",
+                "index": false
             }
         }
     }
