@@ -5,12 +5,13 @@ import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { loadShardStatus } from './data/shards/actions';
 import { loadNodes } from './data/nodes/actions';
-import { isErrored, isLoading, isNotLoaded } from './data/utils';
+import { isErrored, isLoaded, isLoading, isNotLoaded } from './data/utils';
 import Table from './Table';
 
-const mapStateToProps = ({ shards, nodes }) => ({
+const mapStateToProps = ({ shards, nodes, clusters }) => ({
     shards,
     nodes,
+    clusters,
 });
 
 const mapDispatchToProps = {
@@ -30,17 +31,32 @@ class ShardsDashboard extends React.Component {
             data: PropTypes.object,
             error: PropTypes.object,
         }).isRequired,
+        clusters: PropTypes.shape({
+            loadingState: PropTypes.oneOf(['NOT_LOADED', 'LOADING', 'LOADED', 'ERROR']).isRequired,
+            currentCluster: PropTypes.string,
+        }).isRequired,
         loadNodes: PropTypes.func.isRequired,
         loadShardStatus: PropTypes.func.isRequired,
     };
 
     componentDidMount() {
-        const { shards, nodes } = this.props;
+        const { shards, nodes, clusters } = this.props;
+        if (!isLoaded(clusters)) {
+            return;
+        }
+
         if (isNotLoaded(shards) || isErrored(shards)) {
             this.props.loadShardStatus();
         }
         if (isNotLoaded(nodes) || isErrored(nodes)) {
             this.props.loadNodes();
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.clusters.currentCluster !== this.props.clusters.currentCluster) {
+            this.props.loadNodes();
+            this.props.loadShardStatus();
         }
     }
 
