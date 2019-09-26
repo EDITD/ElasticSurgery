@@ -1,14 +1,45 @@
 import React from 'react';
 import './App.css';
-import { AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemText } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Drawer, List, ListItem } from '@material-ui/core';
 import { Provider } from 'react-redux';
 
-import ShardsDashboard from './ShardsDashboard.jsx'
-import NodesDashboard from './NodesDashboard.jsx'
-import Settings from './Settings.jsx'
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
+import ShardsDashboard from './ShardsDashboard.jsx';
+import NodesDashboard from './NodesDashboard.jsx';
+import Settings from './Settings.jsx';
 import store from './data/store';
+import { loadNodes } from './data/nodes/actions';
+
+const routes = [
+    {
+        name: "Home",
+        path: "/",
+        exact: true,
+        render: () => "Welcome to ElasticSurgery",
+    },
+    {
+        name: "Shards",
+        path: "/shards",
+        component: ShardsDashboard,
+    },
+    {
+        name: "Nodes",
+        path: "/nodes",
+        component: NodesDashboard,
+    },
+    {
+        name: "Settings",
+        path: "/settings",
+        component: Settings,
+    }
+]
 
 class App extends React.Component {
+    componentDidMount() {
+        store.dispatch(loadNodes());
+    }
+
     state = {
         selectedContent: "Home",
     }
@@ -20,7 +51,7 @@ class App extends React.Component {
 
     drawerWidth = 240;
     styles = {
-        appBar: {
+        content: {
           width: `calc(100% - ${this.drawerWidth}px)`,
           marginLeft: this.drawerWidth,
         },
@@ -39,57 +70,53 @@ class App extends React.Component {
         </div>
     }
 
-    content = [
-        {
-            name: "Home",
-            component: this.welcomeText,
-        },
-        {
-            name: "Shards",
-            component: ShardsDashboard,
-        },
-        {
-            name: "Nodes",
-            component: NodesDashboard,
-        },
-        {
-            name: "Settings",
-            component: Settings,
-        }
-    ]
-
     render() {
-        const ComponentToRender = this.content.find(components => components.name === this.state.selectedContent).component;
-
         return (
             <Provider store={store}>
-                <div className="App">
-                    <AppBar position="static" style={this.styles.appBar}>
-                        <Toolbar>
-                            <Typography component="h1" variant="h6" color="inherit" noWrap>
-                                ElasticSurgery - Dashboard
-                            </Typography>
-                        </Toolbar>
-                    </AppBar>
-                    <Drawer
-                        variant="permanent"
-                        open={true}
-                        style={this.styles.drawer}
-                    >
-                        <div style={this.styles.drawer}>
-                            <List>
-                            {this.content.map(item => (
-                                <ListItem button key={item.name} onClick={() => this.menuClick(item.name)}>
-                                    <ListItemText primary={item.name} />
-                                </ListItem>
+                <Router>
+                    <div className="App">
+                        <AppBar position="static" style={this.styles.content}>
+                            <Toolbar>
+                                {routes.map((route, index) => (
+                                    <Route
+                                        key={route.name}
+                                        index={index}
+                                        render={() => (
+                                            <Typography component="h1" variant="h6" color="inherit" noWrap>
+                                                ElasticSurgery - {route.name}
+                                            </Typography>
+                                        )}
+                                        path={route.path}
+                                        exact={route.exact}
+                                    />
+                                ))}
+                            </Toolbar>
+                        </AppBar>
+                        <Drawer
+                            variant="permanent"
+                            open={true}
+                            style={this.styles.drawer}
+                        >
+                            <div style={this.styles.drawer}>
+                                <List>
+                                    {routes.map(route => (
+                                        <ListItem button component={Link} key={route.name} to={route.path}>
+                                            {route.name}
+                                        </ListItem>
+                                    ))}
+                                </List>
+                            </div>
+                        </Drawer>
+                        <main style={this.styles.content}>
+                            {routes.map((route, index) => (
+                                <Route
+                                    key={index}
+                                    {...route}
+                                />
                             ))}
-                            </List>
-                        </div>
-                    </Drawer>
-                    <main>
-                        <ComponentToRender />
-                    </main>
-                </div>
+                        </main>
+                    </div>
+                </Router>
             </Provider>
         );
     }
