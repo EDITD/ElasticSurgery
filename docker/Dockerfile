@@ -26,6 +26,7 @@ ADD ./backend/requirements.txt /opt/elasticsurgery/backend/requirements.txt
 # Install
 RUN echo "Install system packages" && \
     apk add --no-cache \
+        curl \
         $PACKAGES && \
     echo "Install Python packages" && \
     pip3 install -r /opt/elasticsurgery/backend/requirements.txt --no-cache-dir && \
