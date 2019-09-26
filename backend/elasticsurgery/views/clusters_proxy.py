@@ -15,7 +15,7 @@ def get_cluster_state(cluster_client, metric_name):
 @app.route('/api/clusters/<cluster_slug>/settings', methods=('GET',))
 @pass_cluster_client
 def get_cluster_settings(cluster_client):
-    settings_data = cluster_client.cluster.get_settings()
+    settings_data = cluster_client.cluster.get_settings(flat_settings=True)
     return jsonify(**settings_data)
 
 
@@ -23,7 +23,10 @@ def get_cluster_settings(cluster_client):
 @pass_cluster_client
 def put_cluster_settings(cluster_client):
     settings = get_request_data()
-    new_settings = cluster_client.cluster.put_settings(body=settings)
+    new_settings = cluster_client.cluster.put_settings(
+        body=settings,
+        flat_settings=True,
+    )
     return jsonify(**new_settings)
 
 
