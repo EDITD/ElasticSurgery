@@ -26,7 +26,7 @@ def get_cluster_config(cluster_name):
 
 
 def get_cluster_client(cluster_slug):
-    cluster_config = get_cluster_client(cluster_slug)
+    cluster_config = get_cluster_config(cluster_slug)
     return get_es_client(cluster_config['base_url'])
 
 
