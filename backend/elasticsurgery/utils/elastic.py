@@ -1,9 +1,14 @@
+from datetime import datetime
 from functools import wraps
 
 from elasticsearch import Elasticsearch
 from pydash import memoize
 
-from elasticsurgery.settings import ES_CLUSTERS_INDEX_NAME, ES_STATE_HOSTS
+from elasticsurgery.settings import (
+    ES_CLUSTERS_INDEX_NAME,
+    ES_LOGS_INDEX_NAME,
+    ES_STATE_HOSTS,
+)
 
 
 @memoize
@@ -41,3 +46,15 @@ def pass_cluster_client(func):
         cluster_client = get_cluster_client(cluster_slug)
         return func(cluster_client, *args, **kwargs)
     return decorator
+
+
+def create_log(type_, data):
+    es_client = get_state_es_client()
+    es_client.create(
+        index=ES_LOGS_INDEX_NAME,
+        body={
+            'type': type_,
+            'data': data,
+            'datetime_utc': datetime.utcnow(),
+        },
+    )

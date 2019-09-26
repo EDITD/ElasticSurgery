@@ -5,3 +5,4 @@ DEBUG = True
 ES_STATE_HOSTS = ['elasticsurgery-elasticsearch:9200']
 
 ES_CLUSTERS_INDEX_NAME = '.elasticsurgery-clusters'
+ES_LOGS_INDEX_NAME = '.elasticsurgery-logs'
