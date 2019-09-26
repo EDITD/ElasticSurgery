@@ -5,13 +5,18 @@ export const NODE_ACTION_TYPES = {
 };
 
 export function loadNodes() {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
+        const clusterSlug = getState().clusters.currentCluster;
+        if (!clusterSlug) {
+            return;
+        }
+
         dispatch({
             type: NODE_ACTION_TYPES.LOAD_NODES,
         });
 
         try {
-            const response = await fetch('_cluster/state/nodes');
+            const response = await fetch(`/api/clusters/${clusterSlug}/state/nodes`);
             if (response.ok) {
                 const data = await response.json();
                 dispatch({

@@ -5,12 +5,13 @@ import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { loadShardStatus } from './data/shards/actions';
 import { loadNodes } from './data/nodes/actions';
-import { isErrored, isLoading, isNotLoaded } from './data/utils';
+import { isErrored, isLoaded, isLoading, isNotLoaded } from './data/utils';
 import Table from './Table';
 
-const mapStateToProps = ({ shards, nodes }) => ({
+const mapStateToProps = ({ shards, nodes, clusters }) => ({
     shards,
     nodes,
+    clusters,
 });
 
 const mapDispatchToProps = {
@@ -30,12 +31,20 @@ class ShardsDashboard extends React.Component {
             data: PropTypes.object,
             error: PropTypes.object,
         }).isRequired,
+        clusters: PropTypes.shape({
+            loadingState: PropTypes.oneOf(['NOT_LOADED', 'LOADING', 'LOADED', 'ERROR']).isRequired,
+            currentCluster: PropTypes.string,
+        }).isRequired,
         loadNodes: PropTypes.func.isRequired,
         loadShardStatus: PropTypes.func.isRequired,
     };
 
     componentDidMount() {
-        const { shards, nodes } = this.props;
+        const { shards, nodes, clusters } = this.props;
+        if (!isLoaded(clusters)) {
+            return;
+        }
+
         if (isNotLoaded(shards) || isErrored(shards)) {
             this.props.loadShardStatus();
         }
@@ -44,13 +53,18 @@ class ShardsDashboard extends React.Component {
         }
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.clusters.currentCluster !== this.props.clusters.currentCluster) {
+            this.props.loadNodes();
+            this.props.loadShardStatus();
+        }
+    }
+
     getContainerStyles(dataLoaded) {
         return {
             display: 'flex',
-            margin: '0 auto',
-            width: 'calc(100% - 240px)',
+            width: '100%',
             height: '100vh',
-            marginLeft: 240,
             alignItems: 'flex-start',
             justifyContent: dataLoaded ? 'flex-start' : 'center',
         };
@@ -77,6 +91,8 @@ class ShardsDashboard extends React.Component {
                 title: 'Index',
                 dataKey: 'index',
                 width: 300,
+                searchable: true,
+                sortable: true,
             },
             {
                 title: 'Shard #',
@@ -92,16 +108,21 @@ class ShardsDashboard extends React.Component {
             {
                 title: 'State',
                 dataKey: 'state',
-                width: 200,
+                width: 300,
+                searchable: true,
+                sortable: true,
             },
             {
                 title: 'Node',
                 dataKey: 'node',
                 flexGrow: 1,
+                width: 300,
                 formatter: nodeId => {
                     const nodeData = nodes.data.nodes[nodeId];
                     return nodeData ? nodeData.name : nodeId;
-                }
+                },
+                searchable: true,
+                sortable: true,
             },
         ];
 

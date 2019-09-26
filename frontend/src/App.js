@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { AppBar, Toolbar, Typography, Drawer, List, ListItem } from '@material-ui/core';
+import { AppBar, Grid, Toolbar, Typography, Drawer, List, ListItem } from '@material-ui/core';
 import { Provider } from 'react-redux';
 
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import ShardsDashboard from './ShardsDashboard.jsx';
 import NodesDashboard from './NodesDashboard.jsx';
 import Settings from './Settings.jsx';
+import ClusterSelector from './ClusterSelector.jsx';
 import store from './data/store';
 import { loadNodes } from './data/nodes/actions';
 
@@ -43,6 +44,7 @@ class App extends React.Component {
     state = {
         selectedContent: "Home",
     }
+
     menuClick = name => {
         this.setState({
             selectedContent: name,
@@ -77,19 +79,26 @@ class App extends React.Component {
                     <div className="App">
                         <AppBar position="static" style={this.styles.content}>
                             <Toolbar>
-                                {routes.map((route, index) => (
-                                    <Route
-                                        key={route.name}
-                                        index={index}
-                                        render={() => (
-                                            <Typography component="h1" variant="h6" color="inherit" noWrap>
-                                                ElasticSurgery - {route.name}
-                                            </Typography>
-                                        )}
-                                        path={route.path}
-                                        exact={route.exact}
-                                    />
-                                ))}
+                                <Grid container alignItems="center" justify="space-between" direction="row">
+                                    {routes.map((route, index) => (
+                                        <Route
+                                            key={route.name}
+                                            index={index}
+                                            render={() => (
+                                                <Grid item>
+                                                    <Typography component="h1" variant="h6" color="inherit" noWrap>
+                                                        ElasticSurgery - {route.name}
+                                                    </Typography>
+                                                </Grid>
+                                            )}
+                                            path={route.path}
+                                            exact={route.exact}
+                                        />
+                                    ))}
+                                    <Grid item>
+                                        <ClusterSelector />
+                                    </Grid>
+                                </Grid>
                             </Toolbar>
                         </AppBar>
                         <Drawer
