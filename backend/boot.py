@@ -6,6 +6,7 @@ from elasticsurgery.views import (  # noqa: F401
     clusters_proxy,
     error,
     indices_proxy,
+    logs,
 )
 
 
