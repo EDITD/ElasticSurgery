@@ -2,7 +2,7 @@ from flask import jsonify
 
 from elasticsurgery.app import app
 from elasticsurgery.settings import ES_LOGS_INDEX_NAME
-from elasticsurgery.util.elastic import get_state_es_client
+from elasticsurgery.utils.elastic import get_state_es_client
 
 
 @app.route('/api/logs', methods=('GET',))
