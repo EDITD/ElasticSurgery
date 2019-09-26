@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemText } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Drawer, List, ListItem } from '@material-ui/core';
 import { Provider } from 'react-redux';
 
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
@@ -95,11 +95,9 @@ class App extends React.Component {
                             <div style={this.styles.drawer}>
                                 <List>
                                     {routes.map(route => (
-                                        <Link to={route.path} key={route.name}>
-                                            <ListItem button>
-                                                <ListItemText primary={route.name} />
-                                            </ListItem>
-                                        </Link>
+                                        <ListItem button component={Link} key={route.name} to={route.path}>
+                                            {route.name}
+                                        </ListItem>
                                     ))}
                                 </List>
                             </div>
