@@ -1,7 +1,8 @@
 from flask import jsonify
 
 from elasticsurgery.app import app
-from elasticsurgery.utils.elastic import create_log, pass_cluster_client
+from elasticsurgery.utils.elastic import pass_cluster_client
+from elasticsurgery.utils.log import create_log
 from elasticsurgery.utils.request import get_request_data
 
 
