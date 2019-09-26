@@ -3,7 +3,7 @@ from functools import wraps
 from elasticsearch import Elasticsearch
 from pydash import memoize
 
-from elasticsurgery.settings import ES_STATE_HOSTS
+from elasticsurgery.settings import ES_INDEX_NAME, ES_STATE_HOSTS
 
 
 @memoize
@@ -18,7 +18,7 @@ def get_state_es_client():
 def get_cluster_config(cluster_name):
     es_client = get_state_es_client()
     cluster_config_doc = es_client.get(
-        index=ES_STATE_HOSTS,
+        index=ES_INDEX_NAME,
         id=cluster_name,
         doc_type='cluster',
     )
