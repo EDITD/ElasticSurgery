@@ -5,13 +5,18 @@ export const SHARD_ACTION_TYPES = {
 };
 
 export function loadShardStatus() {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
+        const currentCluster = getState().clusters.currentCluster;
+        if (!currentCluster) {
+            return;
+        }
+
         dispatch({
             type: SHARD_ACTION_TYPES.LOAD_SHARD_STATUS,
         });
 
         try {
-            const response = await fetch('/api/clusters/local_development_cluster/state/routing_table');
+            const response = await fetch(`/api/clusters/${currentCluster}/state/routing_table`);
             if (response.ok) {
                 const data = await response.json();
                 dispatch({
