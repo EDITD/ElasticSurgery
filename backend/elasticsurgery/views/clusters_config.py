@@ -23,7 +23,7 @@ def delete_cluster(cluster_slug):
         index=ES_INDEX_NAME,
         id=cluster_slug,
     )
-    return jsonify(deleted=True), 201
+    return jsonify(deleted=True), 204
 
 
 @app.route('/api/clusters', methods=['GET'])
