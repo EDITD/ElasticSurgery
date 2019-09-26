@@ -21,3 +21,16 @@ def get_cluster_config(cluster_name):
         doc_type='cluster',
     )
     return cluster_config_doc['_source']
+
+
+def pass_cluster_client(func):
+    '''
+    View decorator for views that take `cluster_slug` as the first argument
+    and replaces with `cluster_client`.
+    '''
+
+    def decorator(cluster_slug, *args, **kwargs):
+        cluster_config = get_cluster_config(cluster_slug)
+        cluster_client = get_es_client(cluster_config['base_url'])
+        return func(cluster_client, *args, **kwargs)
+    return decorator
