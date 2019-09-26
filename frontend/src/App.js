@@ -7,8 +7,13 @@ import ShardsDashboard from './ShardsDashboard.jsx'
 import NodesDashboard from './NodesDashboard.jsx'
 import Settings from './Settings.jsx'
 import store from './data/store';
+import { loadNodes } from './data/nodes/actions';
 
 class App extends React.Component {
+    componentDidMount() {
+        store.dispatch(loadNodes());
+    }
+
     state = {
         selectedContent: "Home",
     }
