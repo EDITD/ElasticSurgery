@@ -12,7 +12,7 @@ const mapDispatchToProps = {
 };
 
 class ClusterSelector extends React.Component {
-   
+
     static propTypes = {
         clusters: PropTypes.shape({
             loadingState: PropTypes.oneOf(['NOT_LOADED', 'LOADING', 'LOADED', 'ERROR']).isRequired,
@@ -34,7 +34,7 @@ class ClusterSelector extends React.Component {
     setCurrentCluster = e => {
         this.props.setCurrentCluster(e.target.value);
     };
-    
+
     render() {
         const { clusters } = this.props;
         let clusterOptions = [];

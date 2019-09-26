@@ -41,28 +41,18 @@ class App extends React.Component {
         store.dispatch(loadNodes());
     }
 
-    state = {
-        selectedContent: "Home",
-    }
-
-    menuClick = name => {
-        this.setState({
-            selectedContent: name,
-        })
-    }
-
     drawerWidth = 240;
     styles = {
         content: {
-          width: `calc(100% - ${this.drawerWidth}px)`,
-          marginLeft: this.drawerWidth,
+            width: `calc(100% - ${this.drawerWidth}px)`,
+            marginLeft: this.drawerWidth,
         },
         drawer: {
-          width: this.drawerWidth,
-          flexShrink: 0,
+            width: this.drawerWidth,
+            flexShrink: 0,
         },
         drawerPaper: {
-          width: this.drawerWidth,
+            width: this.drawerWidth,
         },
     }
 
@@ -79,26 +69,21 @@ class App extends React.Component {
                     <div className="App">
                         <AppBar position="static" style={this.styles.content}>
                             <Toolbar>
-                                <Grid container alignItems="center" justify="space-between" direction="row">
-                                    {routes.map((route, index) => (
-                                        <Route
-                                            key={route.name}
-                                            index={index}
-                                            render={() => (
-                                                <Grid item>
-                                                    <Typography component="h1" variant="h6" color="inherit" noWrap>
-                                                        ElasticSurgery - {route.name}
-                                                    </Typography>
-                                                </Grid>
-                                            )}
-                                            path={route.path}
-                                            exact={route.exact}
-                                        />
-                                    ))}
-                                    <Grid item>
-                                        <ClusterSelector />
-                                    </Grid>
-                                </Grid>
+                                {routes.map((route, index) => (
+                                    <Route
+                                        key={route.name}
+                                        index={index}
+                                        render={() => (
+                                            <Grid item>
+                                                <Typography component="h1" variant="h6" color="inherit" noWrap>
+                                                    ElasticSurgery - {route.name}
+                                                </Typography>
+                                            </Grid>
+                                        )}
+                                        path={route.path}
+                                        exact={route.exact}
+                                    />
+                                ))}
                             </Toolbar>
                         </AppBar>
                         <Drawer
@@ -107,6 +92,9 @@ class App extends React.Component {
                             style={this.styles.drawer}
                         >
                             <div style={this.styles.drawer}>
+                                <div style={{padding: 9}}>
+                                    <ClusterSelector />
+                                </div>
                                 <List>
                                     {routes.map(route => (
                                         <ListItem button component={Link} key={route.name} to={route.path}>
