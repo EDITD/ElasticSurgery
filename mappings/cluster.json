@@ -1,0 +1,13 @@
+{
+    "cluster": {
+        "dynamic": "strict",
+        "properties": {
+            "name": {
+                "type": "keyword"
+            },
+            "base_url": {
+                "type": "keyword"
+            }
+        }
+    }
+}

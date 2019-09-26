@@ -9,10 +9,12 @@ containerContexts:
       volumes:
         - ./:/opt/elasticsurgery
 
+
 tests:
   - name: Run pytest
     containerContext: elasticsurgery
     command: [pytest]
+
 
 deployments:
   elasticsurgery:
@@ -28,6 +30,7 @@ deployments:
         dev:
           command: [./backend/boot.py]
 
+
 dependencies:
   elasticsearch:
     # Dev only
@@ -41,3 +44,47 @@ dependencies:
         probes:
           exec:
             command: [curl, 'elasticsurgery-elasticsearch:9200']
+
+
+upgrades:
+  - name: Create the .elasticsurgery-clusters index
+    conditions:
+      dev: true
+    containerContext: elasticsurgery
+    command: [
+      curl, -X, PUT,
+      'http://elasticsurgery-elasticsearch:9200/.elasticsurgery-clusters',
+      -H, 'Content-Type: application/json',
+    ]
+
+  - name: Create the .elasticsurgery-logs index
+    conditions:
+      dev: true
+    containerContext: elasticsurgery
+    command: [
+      curl, -X, PUT,
+      'http://elasticsurgery-elasticsearch:9200/.elasticsurgery-logs',
+      -H, 'Content-Type: application/json',
+    ]
+
+  - name: Push the .elasticsurgery-clusters/cluster mapping
+    conditions:
+      dev: true
+    containerContext: elasticsurgery
+    command: [
+      curl, -X, PUT,
+      'http://elasticsurgery-elasticsearch:9200/.elasticsurgery-clusters/cluster/_mapping',
+      -H, 'Content-Type: application/json',
+      -d@/opt/elasticsurgery/mappings/cluster.json
+    ]
+
+  - name: Push the .elasticsurgery-logs/log mapping
+    conditions:
+      dev: true
+    containerContext: elasticsurgery
+    command: [
+      curl, -X, PUT,
+      'http://elasticsurgery-elasticsearch:9200/.elasticsurgery-logs/log/_mapping',
+      -H, 'Content-Type: application/json',
+      -d@/opt/elasticsurgery/mappings/log.json
+    ]
