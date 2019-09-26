@@ -11,6 +11,11 @@ def get_logs():
     results = es_client.search(
         index=ES_LOGS_INDEX_NAME,
         size=1000,
+        body={
+            'sort': {
+                'datetime_utc': 'desc',
+            },
+        },
     )
     logs = [log['_source'] for log in results['hits']['hits']]
     return jsonify(
