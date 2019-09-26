@@ -62,36 +62,36 @@ class App extends React.Component {
         const ComponentToRender = this.content.find(components => components.name === this.state.selectedContent).component;
 
         return (
-			<Provider store={store}>
-				<div className="App">
-					<AppBar position="static" style={this.styles.appBar}>
-					  <Toolbar>
-						<Typography component="h1" variant="h6" color="inherit" noWrap>
-						  ElasticSurgery - Dashboard
-						</Typography>
-					  </Toolbar>
-					</AppBar>
-					<Drawer
-						variant="permanent"
-						open={true}
-						style={this.styles.drawer}
-					  >
-					  <div style={this.styles.drawer}>
-						<List>
-							{this.content.map(item => (
-							  <ListItem button key={item.name} onClick={() => this.menuClick(item.name)}>
-								  <ListItemText primary={item.name} />
-							 </ListItem>
-							))}
-						</List>
-					</div>
-				  </Drawer>
-				  <main>
-					  <ComponentToRender />
-				  </main>
-			</div>
-		</Provider>
-    );
+            <Provider store={store}>
+                <div className="App">
+                    <AppBar position="static" style={this.styles.appBar}>
+                        <Toolbar>
+                            <Typography component="h1" variant="h6" color="inherit" noWrap>
+                                ElasticSurgery - Dashboard
+                            </Typography>
+                        </Toolbar>
+                    </AppBar>
+                    <Drawer
+                        variant="permanent"
+                        open={true}
+                        style={this.styles.drawer}
+                    >
+                        <div style={this.styles.drawer}>
+                            <List>
+                            {this.content.map(item => (
+                                <ListItem button key={item.name} onClick={() => this.menuClick(item.name)}>
+                                    <ListItemText primary={item.name} />
+                                </ListItem>
+                            ))}
+                            </List>
+                        </div>
+                    </Drawer>
+                    <main>
+                        <ComponentToRender />
+                    </main>
+                </div>
+            </Provider>
+        );
     }
 }
 
