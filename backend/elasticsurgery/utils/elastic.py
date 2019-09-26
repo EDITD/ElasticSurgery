@@ -1,3 +1,5 @@
+from functools import wraps
+
 from elasticsearch import Elasticsearch
 from pydash import memoize
 
@@ -34,6 +36,7 @@ def pass_cluster_client(func):
     and replaces with `cluster_client`.
     '''
 
+    @wraps(func)
     def decorator(cluster_slug, *args, **kwargs):
         cluster_client = get_cluster_client(cluster_slug)
         return func(cluster_client, *args, **kwargs)
