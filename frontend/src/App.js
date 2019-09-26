@@ -1,19 +1,21 @@
 import React from 'react';
 import './App.css';
 import { AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemText } from '@material-ui/core';
+import { Provider } from 'react-redux';
 
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-import ShardsDashboard from './ShardsDashboard.jsx'
-import NodesDashboard from './NodesDashboard.jsx'
-import Settings from './Settings.jsx'
+import ShardsDashboard from './ShardsDashboard.jsx';
+import NodesDashboard from './NodesDashboard.jsx';
+import Settings from './Settings.jsx';
+import store from './data/store';
 
 const routes = [
     {
         name: "Home",
         path: "/",
         exact: true,
-        component: () => "Welcome to ElasticSurgery",
+        render: () => "Welcome to ElasticSurgery",
     },
     {
         name: "Shards",
@@ -65,53 +67,55 @@ class App extends React.Component {
 
     render() {
         return (
-            <Router>
-                <div className="App">
-                    <AppBar position="static" style={this.styles.content}>
-                        <Toolbar>
+            <Provider store={store}>
+                <Router>
+                    <div className="App">
+                        <AppBar position="static" style={this.styles.content}>
+                            <Toolbar>
+                                {routes.map((route, index) => (
+                                    <Route
+                                        key={route.name}
+                                        index={index}
+                                        render={() => (
+                                            <Typography component="h1" variant="h6" color="inherit" noWrap>
+                                                ElasticSurgery - {route.name}
+                                            </Typography>
+                                        )}
+                                        path={route.path}
+                                        exact={route.exact}
+                                    />
+                                ))}
+                            </Toolbar>
+                        </AppBar>
+                        <Drawer
+                            variant="permanent"
+                            open={true}
+                            style={this.styles.drawer}
+                        >
+                            <div style={this.styles.drawer}>
+                                <List>
+                                    {routes.map(route => (
+                                        <Link to={route.path} key={route.name}>
+                                            <ListItem button>
+                                                <ListItemText primary={route.name} />
+                                            </ListItem>
+                                        </Link>
+                                    ))}
+                                </List>
+                            </div>
+                        </Drawer>
+                        <main style={this.styles.content}>
                             {routes.map((route, index) => (
                                 <Route
-                                    key={route.name}
-                                    index={index}
-                                    render={() => (
-                                        <Typography component="h1" variant="h6" color="inherit" noWrap>
-                                            ElasticSurgery - {route.name}
-                                        </Typography>
-                                    )}
-                                    path={route.path}
-                                    exact={route.exact}
+                                    key={index}
+                                    {...route}
                                 />
                             ))}
-                        </Toolbar>
-                    </AppBar>
-                    <Drawer
-                        variant="permanent"
-                        open={true}
-                        style={this.styles.drawer}
-                      >
-                      <div style={this.styles.drawer}>
-                          <List>
-                              {routes.map(route => (
-                                  <Link to={route.path} key={route.name}>
-                                      <ListItem button>
-                                              <ListItemText primary={route.name} />
-                                      </ListItem>
-                                  </Link>
-                              ))}
-                          </List>
-                  </div>
-              </Drawer>
-              <main style={this.styles.content}>
-                  {routes.map((route, index) => (
-                     <Route
-                       key={index}
-                       {...route}
-                     />
-                 ))}
-              </main>
-        </div>
-    </Router>
-    );
+                        </main>
+                    </div>
+                </Router>
+            </Provider>
+        );
     }
 }
 

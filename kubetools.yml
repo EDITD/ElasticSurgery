@@ -88,3 +88,14 @@ upgrades:
       -H, 'Content-Type: application/json',
       -d@/opt/elasticsurgery/mappings/log.json
     ]
+
+  - name: Write the dev cluster config fixture
+    conditions:
+      dev: true
+    containerContext: elasticsurgery
+    command: [
+      curl, -X, PUT,
+      'http://elasticsurgery-elasticsearch:9200/.elasticsurgery-clusters/_doc/local_development_cluster',
+      -H, 'Content-Type: application/json',
+      -d@/opt/elasticsurgery/fixtures/dev_cluster_config.json
+    ]

@@ -1,0 +1,4 @@
+{
+    "name": "Local Development Cluster",
+    "base_url": "elasticsurgery-elasticsearch:9200"
+}
