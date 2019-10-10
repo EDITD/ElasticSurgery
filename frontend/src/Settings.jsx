@@ -77,7 +77,7 @@ class NewSettingsModalInner extends React.Component {
 }
 const NewSettingsModal = connect(null, mapDispatchToProps)(NewSettingsModalInner);
 
-const SettingsTable = ({ name, settings, settingsType }) => {
+const SettingsTable = ({ name, settings, settingsType, onEditCell }) => {
     const [modalOpen, setModalOpen] = React.useState(false);
 
     const handleOpenModal = () => {
@@ -88,6 +88,15 @@ const SettingsTable = ({ name, settings, settingsType }) => {
         setModalOpen(false);
     };
 
+    const handleCellEdit = (rowData, changedDataKey, newValue, oldValue) => {
+        onEditCell({
+            rowData,
+            changedDataKey,
+            newValue,
+            oldValue,
+        });
+    };
+
     const tableConfig = [
         {
             title: 'Setting',
@@ -95,6 +104,7 @@ const SettingsTable = ({ name, settings, settingsType }) => {
             width: 600,
             searchable: true,
             sortable: true,
+            editable: true,
         },
         {
             title: 'Value',
@@ -103,8 +113,9 @@ const SettingsTable = ({ name, settings, settingsType }) => {
             flexGrow: 1,
             searchable: true,
             sortable: true,
+            editable: true,
         },
-    ]
+    ];
 
     return <Grid container direction="column" alignItems="flex-start" justify="flex-start" style={{height: '100%'}}>
         <Grid container direction="row" alignItems="center" justify="space-between">
@@ -119,7 +130,7 @@ const SettingsTable = ({ name, settings, settingsType }) => {
             </Grid>
         </Grid>
         <Grid item style={{height: 'calc(100% - 48px)', width: '100%'}}>
-            {!!settings.length && <Table config={tableConfig} data={settings} />}
+            {!!settings.length && <Table config={tableConfig} data={settings} onCellEdit={handleCellEdit} />}
             {!settings.length && <Typography type="body1">No settings applied</Typography>}
         </Grid>
     </Grid>
@@ -155,6 +166,16 @@ class SettingsDashboard extends React.Component {
         }, [])
     };
 
+    createCellEdit = settingType => ({
+        rowData,
+        changedDataKey,
+        newValue,
+    }) => {
+        const setting = changedDataKey === 'setting' ? newValue : rowData.setting;
+        const value = changedDataKey === 'value' ? newValue: rowData.value;
+        this.props.putSetting(settingType, setting, value);
+    };
+
     render() {
         const { settings } = this.props;
 
@@ -179,10 +200,10 @@ class SettingsDashboard extends React.Component {
         return <div style={{height: '100vh', margin: '25px 25px'}}>
             <Grid container direction="column" alignItems="stretch" justify="space-between" spacing={4} style={{height: '100%'}}>
                 <Grid item style={{height: '50%'}}>
-                    <SettingsTable name="Persistent" settings={this.getSettings('persistent')} settingsType='persistent' />
+                    <SettingsTable name="Persistent" settings={this.getSettings('persistent')} settingsType='persistent' onEditCell={this.createCellEdit('persistent')} />
                 </Grid>
                 <Grid item style={{height: '50%'}}>
-                    <SettingsTable name="Transient" settings={this.getSettings('transient')} settingsType='transient' />
+                    <SettingsTable name="Transient" settings={this.getSettings('transient')} settingsType='transient' onEditCell={this.createCellEdit('transient')} />
                 </Grid>
             </Grid>
         </div>
