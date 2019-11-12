@@ -6,7 +6,8 @@
                 "type": "keyword"
             },
             "data": {
-                "type": "object"
+                "type": "object",
+                "index": false
             },
             "datetime_utc": {
                 "type": "date"
