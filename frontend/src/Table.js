@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { TableCell, TableSortLabel, InputBase } from '@material-ui/core';
+import { TableCell, TableSortLabel, InputBase, TextField } from '@material-ui/core';
 import { AutoSizer, Column, Table as VTable } from 'react-virtualized';
 import './Table.css'
 
@@ -62,6 +62,13 @@ function applyFormatters(data, config) {
     return data;
 }
 
+const EditableCell = ({ originalValue, onEdit }) => {
+    const [editedValue, setEditedValue] = React.useState(originalValue);
+    const handleChange = e => setEditedValue(e.target.value);
+    const handleEditEnd = () => onEdit(editedValue, originalValue);
+    return <InputBase placeholder={originalValue} value={editedValue} onChange={handleChange} onBlur={handleEditEnd} />
+};
+
 export default class Table extends Component {
     static propTypes = {
         config: PropTypes.arrayOf(PropTypes.shape({
@@ -70,9 +77,11 @@ export default class Table extends Component {
             formatter: PropTypes.func,
             searchable: PropTypes.bool,
             sortable: PropTypes.bool,
+            editable: PropTypes.bool,
             width: PropTypes.number,
             flexGrow: PropTypes.number,
         })).isRequired,
+        onCellEdit: PropTypes.func,
         data: PropTypes.arrayOf(PropTypes.object).isRequired,
         headerHeight: PropTypes.number.isRequired,
         rowHeight: PropTypes.number.isRequired,
@@ -172,14 +181,28 @@ export default class Table extends Component {
         </TableCell>
     };
 
-    cellRenderer = ({ cellData, style, config }) => {
+    createEditHandler = (config, index) => (newValue, oldValue) => {
+        this.props.onCellEdit(this.getRowData({ index }), config.dataKey, newValue, oldValue);
+    };
+
+    cellRenderer = ({ rowIndex, cellData, style, config }) => {
+        if (!config.editable) {
+            return <TableCell
+                variant="body"
+                style={style}
+                component="div"
+            >
+                <span>{cellData}</span>
+            </TableCell>;
+        }
+
         return <TableCell
-            variant="body"
-            style={style}
-            component="div"
-        >
-            <span>{cellData}</span>
-        </TableCell>
+                    variant="body"
+                    style={style}
+                    component="div"
+                >
+                    <EditableCell originalValue={cellData} onEdit={this.createEditHandler(config, rowIndex)} />
+                </TableCell>;
     };
 
     getRowData = ({ index }) => {
