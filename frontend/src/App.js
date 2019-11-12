@@ -1,18 +1,21 @@
 import React from 'react';
 import './App.css';
-import { AppBar, Grid, Toolbar, Typography, Drawer, List, ListItem } from '@material-ui/core';
+import { AppBar, Grid, Toolbar, Typography, Drawer, List, ListItem, ListSubheader } from '@material-ui/core';
 import { Provider } from 'react-redux';
 
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import ShardsDashboard from './ShardsDashboard.jsx';
 import NodesDashboard from './NodesDashboard.jsx';
+import TasksDashboard from './TasksDashboard.jsx';
 import Settings from './Settings.jsx';
+import ClustersDashboard from './ClustersDashboard.jsx';
 import ClusterSelector from './ClusterSelector.jsx';
 import store from './data/store';
 import { loadNodes } from './data/nodes/actions';
 
-const routes = [
+
+const clusterRoutes = [
     {
         name: "Home",
         path: "/",
@@ -30,11 +33,27 @@ const routes = [
         component: NodesDashboard,
     },
     {
+        name: "Tasks",
+        path: "/tasks",
+        component: TasksDashboard,
+    },
+    {
         name: "Settings",
         path: "/settings",
         component: Settings,
+    },
+]
+
+const configRoutes = [
+    {
+        name: "Clusters",
+        path: "/clusters",
+        component: ClustersDashboard,
     }
 ]
+
+const routes = clusterRoutes.concat(configRoutes);
+
 
 class App extends React.Component {
     componentDidMount() {
@@ -96,7 +115,23 @@ class App extends React.Component {
                                     <ClusterSelector />
                                 </div>
                                 <List>
-                                    {routes.map(route => (
+                                    {clusterRoutes.map(route => (
+                                        <ListItem button component={Link} key={route.name} to={route.path}>
+                                            {route.name}
+                                        </ListItem>
+                                    ))}
+                                </List>
+                                <List
+                                subheader={
+                                    <ListSubheader
+                                        component="div"
+                                        id="nested-list-subheader"
+                                    >
+                                      ElasticSurgery Configuration
+                                    </ListSubheader>
+                                  }
+                                >
+                                    {configRoutes.map(route => (
                                         <ListItem button component={Link} key={route.name} to={route.path}>
                                             {route.name}
                                         </ListItem>
