@@ -15,7 +15,7 @@ const mapDispatchToProps = {
     loadNodes,
 }
 
-class ShardsDashboard extends React.Component {
+class NodesDashboard extends React.Component {
     static propTypes = {
         nodes: PropTypes.shape({
             loadingState: PropTypes.oneOf(['NOT_LOADED', 'LOADING', 'LOADED', 'ERROR']).isRequired,
@@ -96,4 +96,4 @@ class ShardsDashboard extends React.Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShardsDashboard);
+export default connect(mapStateToProps, mapDispatchToProps)(NodesDashboard);
