@@ -35,5 +35,5 @@ def put_cluster_settings(cluster_client):
 @app.route('/api/clusters/<cluster_slug>/tasks', methods=('GET',))
 @pass_cluster_client
 def get_cluster_tasks(cluster_client):
-    tasks = cluster_client.tasks.list()
+    tasks = cluster_client.tasks.list(group_by='parents')
     return jsonify(**tasks)
