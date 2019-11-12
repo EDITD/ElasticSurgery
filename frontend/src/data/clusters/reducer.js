@@ -33,7 +33,7 @@ export function reducer(state, action) {
         case CLUSTER_ACTION_TYPES.SET_CURRENT_CLUSTER:
             return {
                 ...state,
-                currentCluster: action.currentCluster,
+                currentCluster: action.clusterSlug,
             };
         default:
             return state;
