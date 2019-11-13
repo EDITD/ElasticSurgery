@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import pretty from 'pretty-time';
 
 import { loadTasks } from './data/tasks/actions';
@@ -21,10 +24,10 @@ const mapDispatchToProps = {
     loadNodes,
 }
 
-const generateTaskTableData = taskDatas => {
+const generateTaskTableData = (taskDatas, includeChildren) => {
     return taskDatas.reduce((rows, taskData) => {
         let childRows = [];
-        if (taskData.children) {
+        if (includeChildren && taskData.children) {
             childRows = generateTaskTableData(taskData.children.map(child => ({
                 ...child,
                 id: `${taskData.id}/${child.id}`,
@@ -115,6 +118,16 @@ class TasksDashboard extends React.Component {
         };
     }
 
+    refreshTasks = () => {
+        this.props.loadTasks();
+    }
+
+    toggleShowChildren = () => {
+        this.setState({
+            showChildren: !this.state.showChildren,
+        });
+    }
+
     render() {
         const { tasks, nodes } = this.props;
         if (isNotLoaded(tasks) || isLoading(tasks) || isNotLoaded(nodes) || isLoading(nodes)) {
@@ -175,14 +188,37 @@ class TasksDashboard extends React.Component {
                 title: 'Child Tasks',
                 dataKey: 'childrenCount',
                 sortable: true,
+                width: 200,
             },
         ];
 
         const tableData = generateTaskTableData(
             Object.values(tasks.data.tasks),
+            this.state.showChildren,
         );
 
         return <div style={this.getContainerStyles(true)}>
+            <div style={this.styles.controls}>
+                <FormControlLabel
+                    control={
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={this.refreshTasks}
+                        >Refresh</Button>
+                    }
+                />
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            value={this.state.showChildren}
+                            onClick={this.toggleShowChildren}
+                        />
+                    }
+                    label="Show child tasks"
+                />
+            </div>
+
             <div style={this.styles.tableWrapper}>
                 <Table config={tableConfig} data={tableData} />
             </div>
