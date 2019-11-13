@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import pretty from 'pretty-time';
 
 import { loadTasks } from './data/tasks/actions';
 import { loadNodes } from './data/nodes/actions';
@@ -19,6 +20,29 @@ const mapDispatchToProps = {
     loadTasks,
     loadNodes,
 }
+
+const generateTaskTableData = taskDatas => {
+    return taskDatas.reduce((rows, taskData) => {
+        let childRows = [];
+        if (taskData.children) {
+            childRows = generateTaskTableData(taskData.children.map(child => ({
+                ...child,
+                id: `${taskData.id}/${child.id}`,
+            })));
+        }
+
+        return [
+            ...rows,
+            {
+                childrenCount: taskData.children ? taskData.children.length : 0,
+                ...taskData,
+                id: `${taskData.id}`,
+            },
+            ...childRows,
+        ];
+    }, []);
+}
+
 
 class TasksDashboard extends React.Component {
     static propTypes = {
@@ -92,26 +116,30 @@ class TasksDashboard extends React.Component {
             {
                 title: 'ID',
                 dataKey: 'id',
-                width: 100,
+                width: 300,
                 sortable: true,
+                searchable: true,
             },
             {
                 title: 'Type',
                 dataKey: 'type',
-                width: 200,
+                width: 300,
                 sortable: true,
+                searchable: true,
             },
             {
                 title: 'Action',
                 dataKey: 'action',
                 width: 500,
                 sortable: true,
+                searchable: true,
             },
             {
                 title: 'Node',
                 dataKey: 'node',
                 width: 300,
                 sortable: true,
+                searchable: true,
                 formatter: nodeId => {
                     const nodeData = nodes.data.nodes[nodeId];
                     return nodeData ? nodeData.name : nodeId;
@@ -122,24 +150,18 @@ class TasksDashboard extends React.Component {
                 dataKey: 'running_time_in_nanos',
                 width: 200,
                 sortable: true,
+                formatter: nanos => pretty([0, nanos]),
             },
             {
                 title: 'Child Tasks',
-                dataKey: 'children',
+                dataKey: 'childrenCount',
                 sortable: true,
-                formatter: children => children ? children.length : 0,
             },
         ];
 
-        const tasksData = this.props.tasks.data;
-        const taskIndices = Object.keys(tasksData.tasks);
-
-        console.log(tasksData, taskIndices);
-
-        const tableData = taskIndices.map(index => ({
-            index,
-            ...tasksData.tasks[index]
-        }));
+        const tableData = generateTaskTableData(
+            Object.values(tasks.data.tasks),
+        );
 
         return <div style={this.getContainerStyles(true)}>
             <Table config={tableConfig} data={tableData} />
