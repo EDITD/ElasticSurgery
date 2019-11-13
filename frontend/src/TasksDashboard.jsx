@@ -64,6 +64,25 @@ class TasksDashboard extends React.Component {
         loadTasks: PropTypes.func.isRequired,
     };
 
+    styles = {
+        tableWrapper: {
+            position: 'absolute',  // only way to get react virtualized to behave sensibly
+            top: 124,
+            bottom: 0,
+            left: 260,
+            right: 0,
+        },
+        controls: {
+            height: 20,
+            marginLeft: 30,
+            marginTop: 20,
+        },
+    }
+
+    state = {
+        showChildren: false,
+    }
+
     componentDidMount() {
         const { tasks, clusters, nodes } = this.props;
         if (!isLoaded(clusters)) {
@@ -89,8 +108,8 @@ class TasksDashboard extends React.Component {
     getContainerStyles(dataLoaded) {
         return {
             display: 'flex',
+            flexWrap: 'wrap',
             margin: '0 auto',
-            height: '100vh',
             alignItems: 'flex-start',
             justifyContent: dataLoaded ? 'flex-start' : 'center',
         };
@@ -164,7 +183,9 @@ class TasksDashboard extends React.Component {
         );
 
         return <div style={this.getContainerStyles(true)}>
-            <Table config={tableConfig} data={tableData} />
+            <div style={this.styles.tableWrapper}>
+                <Table config={tableConfig} data={tableData} />
+            </div>
         </div>;
     }
 }
