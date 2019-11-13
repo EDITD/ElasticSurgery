@@ -19,3 +19,13 @@ And then to start the webpack server and follow the server logs:
 ```
 honcho start
 ```
+
+### Pointing at another cluster
+
+To look at another cluster in development, first make a copy of `fixtures/dev_cluster_config.json` and add it to the development Elasticsearch instance like so:
+
+```sh
+curl -X PUT http://dev.edtd.net:26950/.elasticsurgery-clusters/_doc/<SLUG> \
+    -H 'Content-Type: application/json' \
+    -d@my_json_config.json
+```
