@@ -44,7 +44,7 @@ class ClusterSelector extends React.Component {
                 }, []);
         }
 
-        return <FormControl>
+        return <FormControl style={{width: '100%'}}>
             <InputLabel shrink htmlFor='cluster-selection'>Current Cluster</InputLabel>
             <Select
                 value={clusters.currentCluster || ''}
@@ -53,7 +53,6 @@ class ClusterSelector extends React.Component {
                     name: 'cluster-selection',
                     id: 'cluster-selection',
                 }}
-                autoWidth
             >
                 {clusterOptions.map(({ slug, name }) => <MenuItem value={slug} key={slug}>{name}</MenuItem>)}
             </Select>
