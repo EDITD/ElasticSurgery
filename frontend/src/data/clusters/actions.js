@@ -8,7 +8,7 @@ export const CLUSTER_ACTION_TYPES = {
 export function setCurrentCluster(clusterSlug) {
     return {
         type: CLUSTER_ACTION_TYPES.SET_CURRENT_CLUSTER,
-        clusterSlug,
+        currentCluster: clusterSlug,
     };
 }
 

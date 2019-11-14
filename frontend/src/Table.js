@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { TableCell, TableSortLabel, InputBase, TextField } from '@material-ui/core';
+import { TableCell, TableSortLabel, InputBase } from '@material-ui/core';
 import { AutoSizer, Column, Table as VTable } from 'react-virtualized';
 import './Table.css'
 
@@ -122,13 +122,16 @@ export default class Table extends Component {
         const { config, data } = this.props;
 
         this.setState({
-            data: applySort(
-                applySearch(
-                    applyFormatters([...data], config),
-                    searchTerms,
+            data: applySearch(  // search using formatted values
+                applyFormatters(  // format/pretty for user
+                    [...applySort(  // sort with raw input values
+                        data,
+                        orderBy,
+                        orderDirection,
+                    )],
+                    config,
                 ),
-                orderBy,
-                orderDirection,
+                searchTerms,
             ),
         });
     };

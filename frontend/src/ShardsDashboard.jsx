@@ -3,9 +3,17 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
+
 import { loadShardStatus } from './data/shards/actions';
 import { loadNodes } from './data/nodes/actions';
-import { isErrored, isLoaded, isLoading, isNotLoaded } from './data/utils';
+import {
+    dataPropType,
+    loadingStatePropType,
+    isErrored,
+    isLoaded,
+    isLoading,
+    isNotLoaded,
+} from './data/utils';
 import Table from './Table';
 
 const mapStateToProps = ({ shards, nodes, clusters }) => ({
@@ -21,18 +29,10 @@ const mapDispatchToProps = {
 
 class ShardsDashboard extends React.Component {
     static propTypes = {
-        shards: PropTypes.shape({
-            loadingState: PropTypes.oneOf(['NOT_LOADED', 'LOADING', 'LOADED', 'ERROR']).isRequired,
-            data: PropTypes.object,
-            error: PropTypes.object,
-        }).isRequired,
-        nodes: PropTypes.shape({
-            loadingState: PropTypes.oneOf(['NOT_LOADED', 'LOADING', 'LOADED', 'ERROR']).isRequired,
-            data: PropTypes.object,
-            error: PropTypes.object,
-        }).isRequired,
+        shards: dataPropType,
+        nodes: dataPropType,
         clusters: PropTypes.shape({
-            loadingState: PropTypes.oneOf(['NOT_LOADED', 'LOADING', 'LOADED', 'ERROR']).isRequired,
+            loadingState: loadingStatePropType,
             currentCluster: PropTypes.string,
         }).isRequired,
         loadNodes: PropTypes.func.isRequired,

@@ -1,4 +1,4 @@
-import { CLUSTER_ACTION_TYPES } from './actions';
+import { TASK_ACTION_TYPES } from './actions';
 
 export const initialState = {
     loadingState: 'NOT_LOADED',
@@ -11,29 +11,24 @@ export function reducer(state, action) {
         };
     }
 
-    switch(action.type) {
-        case CLUSTER_ACTION_TYPES.LOAD_CLUSTERS:
+    switch (action.type) {
+        case TASK_ACTION_TYPES.LOAD_TASK_STATUS:
             return {
                 ...state,
                 loadingState: 'LOADING',
                 error: null,
             };
-        case CLUSTER_ACTION_TYPES.LOAD_CLUSTERS_SUCCESS:
+        case TASK_ACTION_TYPES.LOAD_TASK_STATUS_SUCCESS:
             return {
                 ...state,
                 loadingState: 'LOADED',
                 data: action.data,
             };
-        case CLUSTER_ACTION_TYPES.LOAD_CLUSTERS_ERROR:
+        case TASK_ACTION_TYPES.LOAD_TASK_STATUS_ERROR:
             return {
                 ...state,
                 loadingState: 'ERROR',
                 error: action.error,
-            };
-        case CLUSTER_ACTION_TYPES.SET_CURRENT_CLUSTER:
-            return {
-                ...state,
-                currentCluster: action.currentCluster,
             };
         default:
             return state;
