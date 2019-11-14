@@ -1,4 +1,5 @@
 from flask import jsonify, request
+from slugify import slugify
 
 from elasticsurgery.app import app
 from elasticsurgery.settings import ES_CLUSTERS_INDEX_NAME
@@ -7,13 +8,22 @@ from elasticsurgery.utils.elastic import get_state_es_client
 
 @app.route('/api/clusters', methods=['POST'])
 def create_cluster():
+    request_data = request.get_json()
+
+    doc = {
+        'name': request_data['name'],
+        'base_url': request_data['base_url'],
+    }
+    slug = slugify(request_data['name'])
+
     es_client = get_state_es_client()
-    result = es_client.create(
+    es_client.create(
         index=ES_CLUSTERS_INDEX_NAME,
-        id=request.json['id'],
-        body=request.json['body'],
+        id=slug,
+        body=doc,
     )
-    return jsonify(created=True, data=result), 201
+
+    return jsonify(created=True, slug=slug, data=request_data), 201
 
 
 @app.route('/api/clusters/<cluster_slug>', methods=['DELETE'])
@@ -23,7 +33,7 @@ def delete_cluster(cluster_slug):
         index=ES_CLUSTERS_INDEX_NAME,
         id=cluster_slug,
     )
-    return jsonify(deleted=True), 204
+    return jsonify(deleted=True, slug=cluster_slug), 200
 
 
 @app.route('/api/clusters', methods=['GET'])
