@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { TableCell, TableSortLabel, InputBase, TextField } from '@material-ui/core';
+import { TableCell, TableSortLabel, InputBase } from '@material-ui/core';
 import { AutoSizer, Column, Table as VTable } from 'react-virtualized';
 import './Table.css'
 
