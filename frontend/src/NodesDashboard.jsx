@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { loadNodes } from './data/nodes/actions';
-import { isErrored, isLoading, isNotLoaded } from './data/utils';
+import { dataPropType, isErrored, isLoading, isNotLoaded } from './data/utils';
 import Table from './Table';
 
 const mapStateToProps = ({ nodes }) => ({
@@ -17,11 +17,7 @@ const mapDispatchToProps = {
 
 class NodesDashboard extends React.Component {
     static propTypes = {
-        nodes: PropTypes.shape({
-            loadingState: PropTypes.oneOf(['NOT_LOADED', 'LOADING', 'LOADED', 'ERROR']).isRequired,
-            data: PropTypes.object,
-            error: PropTypes.object,
-        }).isRequired,
+        nodes: dataPropType,
         loadNodes: PropTypes.func.isRequired,
     };
 

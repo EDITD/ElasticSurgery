@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { loadClusters, setCurrentCluster } from './data/clusters/actions';
-import { isErrored, isLoaded, isNotLoaded } from './data/utils';
+import { loadingStatePropType, isErrored, isLoaded, isNotLoaded } from './data/utils';
 
 const mapStateToProps = ({ clusters }) => ({ clusters });
 const mapDispatchToProps = {
@@ -15,9 +15,7 @@ class ClusterSelector extends React.Component {
 
     static propTypes = {
         clusters: PropTypes.shape({
-            loadingState: PropTypes.oneOf(['NOT_LOADED', 'LOADING', 'LOADED', 'ERROR']).isRequired,
-            data: PropTypes.object,
-            error: PropTypes.object,
+            loadingState: loadingStatePropType,
             currentCluster: PropTypes.string,
         }).isRequired,
         loadClusters: PropTypes.func.isRequired,

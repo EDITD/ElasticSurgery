@@ -10,8 +10,16 @@ import pretty from 'pretty-time';
 
 import { loadTasks } from './data/tasks/actions';
 import { loadNodes } from './data/nodes/actions';
-import { isErrored, isLoaded, isLoading, isNotLoaded } from './data/utils';
+import {
+    dataPropType,
+    loadingStatePropType,
+    isErrored,
+    isLoaded,
+    isLoading,
+    isNotLoaded,
+} from './data/utils';
 import Table from './Table';
+
 
 const mapStateToProps = ({ tasks, nodes, clusters }) => ({
     tasks,
@@ -49,18 +57,10 @@ const generateTaskTableData = (taskDatas, includeChildren) => {
 
 class TasksDashboard extends React.Component {
     static propTypes = {
-        tasks: PropTypes.shape({
-            loadingState: PropTypes.oneOf(['NOT_LOADED', 'LOADING', 'LOADED', 'ERROR']).isRequired,
-            data: PropTypes.object,
-            error: PropTypes.object,
-        }).isRequired,
-        nodes: PropTypes.shape({
-            loadingState: PropTypes.oneOf(['NOT_LOADED', 'LOADING', 'LOADED', 'ERROR']).isRequired,
-            data: PropTypes.object,
-            error: PropTypes.object,
-        }).isRequired,
+        tasks: dataPropType,
+        nodes: dataPropType,
         clusters: PropTypes.shape({
-            loadingState: PropTypes.oneOf(['NOT_LOADED', 'LOADING', 'LOADED', 'ERROR']).isRequired,
+            loadingState: loadingStatePropType,
             currentCluster: PropTypes.string,
         }).isRequired,
         loadNodes: PropTypes.func.isRequired,

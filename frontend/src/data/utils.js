@@ -1,3 +1,18 @@
+import PropTypes from 'prop-types';
+
+
+export const loadingStatePropType = PropTypes.oneOf([
+    'NOT_LOADED', 'LOADING', 'LOADED', 'ERROR',
+]).isRequired;
+
+
+export const dataPropType = PropTypes.shape({
+    loadingState: loadingStatePropType,
+    data: PropTypes.object,
+    error: PropTypes.object,
+}).isRequired
+
+
 export function isLoading(store) {
     const { loadingState } = store;
     return loadingState === 'LOADING';
