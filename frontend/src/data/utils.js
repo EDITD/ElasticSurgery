@@ -8,7 +8,7 @@ export const loadingStatePropType = PropTypes.oneOf([
 
 export const dataPropType = PropTypes.shape({
     loadingState: loadingStatePropType,
-    data: PropTypes.object,
+    data: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     error: PropTypes.object,
 }).isRequired
 
