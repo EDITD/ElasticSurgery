@@ -6,7 +6,7 @@ from elasticsurgery.utils.elastic import get_state_es_client
 
 def create_log(type_, data):
     es_client = get_state_es_client()
-    es_client.create(
+    es_client.index(
         index=ES_LOGS_INDEX_NAME,
         body={
             'type': type_,
