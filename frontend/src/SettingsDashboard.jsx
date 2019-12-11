@@ -110,7 +110,6 @@ const SettingsTable = ({ name, settings, settingsType, onEditCell }) => {
             title: 'Value',
             dataKey: 'value',
             width: 600,
-            flexGrow: 1,
             searchable: true,
             sortable: true,
             editable: true,
@@ -138,6 +137,17 @@ const SettingsTable = ({ name, settings, settingsType, onEditCell }) => {
 
 
 class SettingsDashboard extends React.Component {
+    styles = {
+        wrapper: {
+            position: 'absolute',  // only way to get react virtualized to behave sensibly
+            top: 124,
+            bottom: 0,
+            left: 260,
+            right: 0,
+            padding: 20,
+        },
+    }
+
     componentDidMount() {
         const { clusters, settings } = this.props;
         if (!isLoaded(clusters)) {
@@ -198,7 +208,7 @@ class SettingsDashboard extends React.Component {
             </Grid>;
         }
 
-        return <div style={{padding: 20}}>
+        return <div style={this.styles.wrapper}>
             <Grid container direction="column" alignItems="stretch" justify="space-between" spacing={4} style={{height: '100%'}}>
                 <Grid item style={{height: '50%'}}>
                     <SettingsTable name="Persistent" settings={this.getSettings('persistent')} settingsType='persistent' onEditCell={this.createCellEdit('persistent')} />
