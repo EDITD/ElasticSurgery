@@ -16,6 +16,7 @@ import {
 import ShardsDashboard from './ShardsDashboard.jsx';
 import NodesDashboard from './NodesDashboard.jsx';
 import TasksDashboard from './TasksDashboard.jsx';
+import IndicesDashboard from './IndicesDashboard.jsx';
 import Settings from './Settings.jsx';
 import ClustersDashboard from './ClustersDashboard.jsx';
 import ClusterSelector from './ClusterSelector.jsx';
@@ -29,6 +30,11 @@ const clusterRoutes = [
         path: "/",
         exact: true,
         render: () => "Welcome to ElasticSurgery",
+    },
+    {
+        name: "Indices",
+        path: "/indices",
+        component: IndicesDashboard,
     },
     {
         name: "Shards",
