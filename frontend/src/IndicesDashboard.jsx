@@ -84,21 +84,8 @@ class IndicesDashboard extends React.Component {
         this.props.loadIndices();
     };
 
-    render() {
+    renderTable = () => {
         const { indices } = this.props;
-        if (isNotLoaded(indices) || isLoading(indices)) {
-            return <div style={this.getContainerStyles()}>
-                <CircularProgress />
-            </div>;
-        }
-
-        if (isErrored(indices)) {
-            return <div style={this.getContainerStyles()}>
-                <Typography variant="body1" component="p">
-                    An error occurred loading the current status
-                </Typography>
-            </div>;
-        }
 
         const tableConfig = [
             {
@@ -162,6 +149,27 @@ class IndicesDashboard extends React.Component {
             return index;
         });
 
+        return <div style={this.styles.tableWrapper}>
+            <Table config={tableConfig} data={tableData}/>
+        </div>;
+    };
+
+    render() {
+        const { indices } = this.props;
+        if (isNotLoaded(indices) || isLoading(indices)) {
+            return <div style={this.getContainerStyles()}>
+                <CircularProgress />
+            </div>;
+        }
+
+        if (isErrored(indices)) {
+            return <div style={this.getContainerStyles()}>
+                <Typography variant="body1" component="p">
+                    An error occurred loading the current status
+                </Typography>
+            </div>;
+        }
+
         return <div style={this.getContainerStyles(true)}>
             <div style={this.styles.controls}>
                 <FormControlLabel
@@ -175,9 +183,7 @@ class IndicesDashboard extends React.Component {
                 />
             </div>
 
-            <div style={this.styles.tableWrapper}>
-                <Table config={tableConfig} data={tableData} />
-            </div>
+            {this.renderTable()}
         </div>;
     }
 }
