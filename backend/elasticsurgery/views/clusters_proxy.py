@@ -6,6 +6,13 @@ from elasticsurgery.utils.log import create_log
 from elasticsurgery.utils.request import get_request_data
 
 
+@app.route('/api/clusters/<cluster_slug>/cat/<data_name>', methods=('GET',))
+@pass_cluster_client
+def get_cluster_cat_data(cluster_client, data_name):
+    method = getattr(cluster_client.cat, data_name)
+    return jsonify(method(format='json'))
+
+
 @app.route('/api/clusters/<cluster_slug>/state/<metric_name>', methods=('GET',))
 @pass_cluster_client
 def get_cluster_state(cluster_client, metric_name):
