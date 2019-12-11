@@ -25,7 +25,7 @@ const mapStateToProps = ({ shards, nodes, clusters }) => ({
 const mapDispatchToProps = {
     loadShardStatus,
     loadNodes,
-}
+};
 
 class ShardsDashboard extends React.Component {
     static propTypes = {

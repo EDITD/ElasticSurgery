@@ -25,7 +25,7 @@ const mapStateToProps = ({ indices, clusters }) => ({
 
 const mapDispatchToProps = {
     loadIndices,
-}
+};
 
 
 class IndicesDashboard extends React.Component {
@@ -51,7 +51,7 @@ class IndicesDashboard extends React.Component {
             marginLeft: 30,
             marginTop: 20,
         },
-    }
+    };
 
     componentDidMount() {
         const { indices, clusters } = this.props;
@@ -82,7 +82,7 @@ class IndicesDashboard extends React.Component {
 
     refreshIndices = () => {
         this.props.loadIndices();
-    }
+    };
 
     render() {
         const { indices } = this.props;

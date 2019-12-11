@@ -56,7 +56,7 @@ const clusterRoutes = [
         path: "/settings",
         component: Settings,
     },
-]
+];
 
 const configRoutes = [
     {
@@ -64,7 +64,7 @@ const configRoutes = [
         path: "/clusters",
         component: ClustersDashboard,
     }
-]
+];
 
 const routes = clusterRoutes.concat(configRoutes);
 
@@ -87,12 +87,12 @@ class App extends React.Component {
         drawerPaper: {
             width: this.drawerWidth,
         },
-    }
+    };
 
     welcomeText() {
         return <div>
             "Welcome to ElasticSurgery"
-        </div>
+        </div>;
     }
 
     render() {

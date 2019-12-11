@@ -32,5 +32,5 @@ export function loadNodes() {
                 error,
             });
         }
-    }
+    };
 }
