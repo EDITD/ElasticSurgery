@@ -1,9 +1,17 @@
 import React from 'react';
-import './App.css';
-import { AppBar, Grid, Toolbar, Typography, Drawer, List, ListItem, ListSubheader } from '@material-ui/core';
 import { Provider } from 'react-redux';
-
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
+import {
+    AppBar,
+    Grid,
+    Toolbar,
+    Typography,
+    Drawer,
+    List,
+    ListItem,
+    ListSubheader,
+} from '@material-ui/core';
 
 import ShardsDashboard from './ShardsDashboard.jsx';
 import NodesDashboard from './NodesDashboard.jsx';

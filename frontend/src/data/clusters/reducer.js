@@ -35,6 +35,14 @@ export function reducer(state, action) {
                 ...state,
                 currentCluster: action.currentCluster,
             };
+        case CLUSTER_ACTION_TYPES.ADD_CLUSTER:
+            // Add the cluster
+            state.data.clusters[action.slug] = action.data;
+            return {...state};
+        case CLUSTER_ACTION_TYPES.DELETE_CLUSTER:
+            // Remove the cluster
+            delete state.data.clusters[action.slug];
+            return {...state};
         default:
             return state;
     }
