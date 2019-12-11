@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Button, CircularProgress, IconButton, Grid, TextField, Typography, Modal } from '@material-ui/core';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import AddBoxIcon from '@material-ui/icons/AddBox'
 import { loadSettings, putSetting } from './data/settings/actions';
 import { isLoaded, isLoading, isNotLoaded, isErrored } from './data/utils';
@@ -50,18 +51,19 @@ class NewSettingsModalInner extends React.Component {
                 position: 'absolute',
                 backgroundColor: 'white',
                 padding: 15,
+                width: 800,
             }}>
                 <Grid container direction="column" justify="flex-start" alignItems="flex-start" spacing={4}>
                     <Grid item>
                         <Typography variant="h6">New {this.props.type} setting</Typography>
                     </Grid>
-                    <Grid item>
+                    <Grid item style={{width: '100%'}}>
                         <Grid container direction="row" justify="space-between" alignItems="flex-end">
-                            <Grid item>
-                                <TextField value={this.state.setting} label="Setting" onChange={this.createStateUpdate('setting')} />
+                            <Grid item style={{width: '48%'}}>
+                                <TextField value={this.state.setting} label="Setting" onChange={this.createStateUpdate('setting')} fullWidth={true} />
                             </Grid>
-                            <Grid item>
-                                <TextField value={this.state.value} label="Value" onChange={this.createStateUpdate('value')} />
+                            <Grid item style={{width: '48%'}}>
+                                <TextField value={this.state.value} label="Value" onChange={this.createStateUpdate('value')} fullWidth={true} />
                             </Grid>
                         </Grid>
                     </Grid>
@@ -97,6 +99,29 @@ const SettingsTable = ({ name, settings, settingsType, onEditCell }) => {
         });
     };
 
+    const renderRowEditButton = (data) => {
+        return (
+            <div style={{marginLeft: 15}}>
+                <FormControlLabel
+                    control={
+                        <Button
+                            variant="contained"
+                            color="primary"
+                        >Edit</Button>
+                    }
+                />
+                <FormControlLabel
+                    control={
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                        >Delete</Button>
+                    }
+                />
+            </div>
+        );
+    }
+
     const tableConfig = [
         {
             title: 'Setting',
@@ -104,7 +129,6 @@ const SettingsTable = ({ name, settings, settingsType, onEditCell }) => {
             width: 600,
             searchable: true,
             sortable: true,
-            editable: true,
         },
         {
             title: 'Value',
@@ -112,7 +136,12 @@ const SettingsTable = ({ name, settings, settingsType, onEditCell }) => {
             width: 600,
             searchable: true,
             sortable: true,
-            editable: true,
+        },
+        {
+            title: 'Actions',
+            dataKey: 'value',
+            width: 200,
+            renderFunction: renderRowEditButton,
         },
     ];
 

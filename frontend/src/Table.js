@@ -189,6 +189,11 @@ export default class Table extends Component {
     };
 
     cellRenderer = ({ rowIndex, cellData, style, config }) => {
+        if (config.renderFunction) {
+            const rowData = this.getRowData({ index: rowIndex });
+            return config.renderFunction(rowData);
+        }
+
         if (!config.editable) {
             return <TableCell
                 variant="body"
