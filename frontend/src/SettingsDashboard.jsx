@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Button, CircularProgress, IconButton, Grid, TextField, Typography, Modal } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import AddBoxIcon from '@material-ui/icons/AddBox'
-import { loadSettings, putSetting } from './data/settings/actions';
+import { loadSettings, putSetting, deleteSetting } from './data/settings/actions';
 import { isLoaded, isLoading, isNotLoaded, isErrored } from './data/utils';
 import Table from './Table.js';
 
@@ -12,6 +12,7 @@ const mapStateToProps = ({ clusters, settings }) => ({ clusters, settings });
 const mapDispatchToProps = {
     loadSettings,
     putSetting,
+    deleteSetting,
 }
 
 class SettingsModalInner extends React.Component {
@@ -92,7 +93,7 @@ class SettingsModalInner extends React.Component {
 const SettingsModal = connect(null, mapDispatchToProps)(SettingsModalInner);
 
 
-const SettingsTable = ({ name, settings, settingsType, onEditCell }) => {
+const SettingsTableInner = ({ name, settings, settingsType, onEditCell, deleteSetting }) => {
     const [modalOpen, setModalOpen] = React.useState(false);
     const [modalData, setModalData] = React.useState({});
     const [modalAction, setModalAction] = React.useState('New');
@@ -130,6 +131,7 @@ const SettingsTable = ({ name, settings, settingsType, onEditCell }) => {
                         <Button
                             variant="contained"
                             color="secondary"
+                            onClick={() => deleteSetting(settingsType, data.setting)}
                         >Delete</Button>
                     }
                 />
@@ -190,6 +192,7 @@ const SettingsTable = ({ name, settings, settingsType, onEditCell }) => {
         </Grid>
     </Grid>
 }
+const SettingsTable = connect(null, mapDispatchToProps)(SettingsTableInner);
 
 
 class SettingsDashboard extends React.Component {
