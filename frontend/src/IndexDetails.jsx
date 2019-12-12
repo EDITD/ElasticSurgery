@@ -10,9 +10,16 @@ import {
     SentimentVeryDissatisfiedTwoTone,
 } from '@material-ui/icons';
 
+import { loadIndexSettings } from "./data/indices/actions";
+import {isErrored, isNotLoaded} from "./data/utils";
+
 const mapStateToProps = ({ indices }, {match}) => ({
     index: indices.data.find(index => (index.index === match.params.indexName)),
 });
+
+const mapDispatchToProps = {
+    loadIndexSettings,
+};
 
 class IndexDetails extends React.Component {
     static propTypes = {
@@ -30,6 +37,26 @@ class IndexDetails extends React.Component {
 
         }
     };
+
+    componentDidMount() {
+        const { index } = this.props;
+        if (!index) {
+            return;
+        }
+
+        const es_settings = index.es_settings;
+        if (!es_settings || isNotLoaded(es_settings) || isErrored(es_settings)) {
+            this.props.loadIndexSettings(index.index);
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        const { index } = this.props;
+        if (prevProps.index !== index) {
+            this.props.loadIndexSettings(index.index);
+        }
+    }
+
     renderStatus(status) {
         const statusIcon = {
             green: <SentimentVerySatisfiedTwoTone
@@ -55,6 +82,11 @@ class IndexDetails extends React.Component {
     render() {
         const {index} = this.props;
 
+        if (!index || !index.es_settings || !index.es_settings.data) {
+            return null;
+        }
+
+        const es_settings = index.es_settings.data[index.index];
         return (
             <div style={this.styles.page}>
                 <Grid container direction="column" style={{height: '100%'}}>
@@ -67,12 +99,12 @@ class IndexDetails extends React.Component {
                     </Grid>
                     <Grid item style={this.styles.section}>
                         <Typography variant="h7">Current Settings</Typography>
-                        <pre>{JSON.stringify(index, null,4)}</pre>
+                        <pre>{JSON.stringify(es_settings, null, 4)}</pre>
                     </Grid>
 
                     <Grid item style={this.styles.section}>
                         <Typography variant="h7">Desired Settings</Typography>
-                        <pre>{JSON.stringify(index, null,4)}</pre>
+                        <pre>{JSON.stringify(index, null, 4)}</pre>
                     </Grid>
                 </Grid>
             </div>
@@ -81,4 +113,4 @@ class IndexDetails extends React.Component {
 
 }
 
-export default connect(mapStateToProps, null)(IndexDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(IndexDetails);
