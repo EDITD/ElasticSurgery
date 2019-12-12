@@ -69,6 +69,10 @@ const EditableCell = ({ originalValue, onEdit }) => {
     return <InputBase placeholder={originalValue} value={editedValue} onChange={handleChange} onBlur={handleEditEnd} />;
 };
 
+export const LinkCell = ({cellData, rowData}) => {
+        return <a href={rowData.link_to}>{cellData}</a>;
+};
+
 export default class Table extends Component {
     static propTypes = {
         config: PropTypes.arrayOf(PropTypes.shape({
@@ -80,6 +84,7 @@ export default class Table extends Component {
             editable: PropTypes.bool,
             width: PropTypes.number,
             flexGrow: PropTypes.number,
+            component: PropTypes.element
         })).isRequired,
         onCellEdit: PropTypes.func,
         data: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -188,7 +193,17 @@ export default class Table extends Component {
         this.props.onCellEdit(this.getRowData({ index }), config.dataKey, newValue, oldValue);
     };
 
-    cellRenderer = ({ rowIndex, cellData, style, config }) => {
+    cellRenderer = ({ rowIndex, cellData, style, config, ...otherArgs }) => {
+        const Component = config.component;
+        if (Component) {
+            return <TableCell
+                variant="body"
+                style={style}
+            >
+                <Component {...{ cellData, rowIndex, ...otherArgs }} />
+            </TableCell>;
+        }
+
         if (!config.editable) {
             return <TableCell
                 variant="body"
@@ -202,7 +217,6 @@ export default class Table extends Component {
         return <TableCell
                     variant="body"
                     style={style}
-                    component="div"
                 >
                     <EditableCell originalValue={cellData} onEdit={this.createEditHandler(config, rowIndex)} />
                 </TableCell>;

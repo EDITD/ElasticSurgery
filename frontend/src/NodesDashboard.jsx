@@ -21,6 +21,16 @@ class NodesDashboard extends React.Component {
         loadNodes: PropTypes.func.isRequired,
     };
 
+    styles = {
+        tableWrapper: {
+            position: 'absolute',
+            top: 64,
+            bottom: 0,
+            left: 260,
+            right: 0,
+        },
+    }
+
     componentDidMount() {
         const { nodes } = this.props;
         if (isNotLoaded(nodes) || isErrored(nodes)) {
@@ -31,8 +41,8 @@ class NodesDashboard extends React.Component {
     getContainerStyles(dataLoaded) {
         return {
             display: 'flex',
+            flexWrap: 'wrap',
             margin: '0 auto',
-            height: '100vh',
             alignItems: 'flex-start',
             justifyContent: dataLoaded ? 'flex-start' : 'center',
         };
@@ -87,7 +97,9 @@ class NodesDashboard extends React.Component {
         }));
 
         return <div style={this.getContainerStyles(true)}>
-            <Table config={tableConfig} data={tableData} />
+            <div style={this.styles.tableWrapper}>
+                <Table config={tableConfig} data={tableData} />
+            </div>
         </div>;
     }
 }

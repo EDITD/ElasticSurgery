@@ -39,6 +39,16 @@ class ShardsDashboard extends React.Component {
         loadShardStatus: PropTypes.func.isRequired,
     };
 
+    styles = {
+        tableWrapper: {
+            position: 'absolute',
+            top: 64,
+            bottom: 0,
+            left: 260,
+            right: 0,
+        },
+    }
+
     componentDidMount() {
         const { shards, nodes, clusters } = this.props;
         if (!isLoaded(clusters)) {
@@ -63,8 +73,8 @@ class ShardsDashboard extends React.Component {
     getContainerStyles(dataLoaded) {
         return {
             display: 'flex',
-            width: '100%',
-            height: '100vh',
+            flexWrap: 'wrap',
+            margin: '0 auto',
             alignItems: 'flex-start',
             justifyContent: dataLoaded ? 'flex-start' : 'center',
         };
@@ -141,7 +151,9 @@ class ShardsDashboard extends React.Component {
         }, []);
 
         return <div style={this.getContainerStyles(true)}>
-            <Table config={tableConfig} data={allShards} />
+            <div style={this.styles.tableWrapper}>
+                <Table config={tableConfig} data={allShards} />
+            </div>
         </div>;
     }
 }

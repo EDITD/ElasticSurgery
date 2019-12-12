@@ -17,7 +17,7 @@ import ShardsDashboard from './ShardsDashboard.jsx';
 import NodesDashboard from './NodesDashboard.jsx';
 import TasksDashboard from './TasksDashboard.jsx';
 import IndicesDashboard from './IndicesDashboard.jsx';
-import Settings from './Settings.jsx';
+import SettingsDashboard from './SettingsDashboard.jsx';
 import ClustersDashboard from './ClustersDashboard.jsx';
 import ClusterSelector from './ClusterSelector.jsx';
 import store from './data/store';
@@ -54,7 +54,7 @@ const clusterRoutes = [
     {
         name: "Settings",
         path: "/settings",
-        component: Settings,
+        component: SettingsDashboard,
     },
 ];
 
