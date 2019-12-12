@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Switch, Route } from "react-router-dom";
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
@@ -16,6 +17,7 @@ import {
     isNotLoaded,
 } from './data/utils';
 import Table from './Table';
+import IndexDetails from "./IndexDetails";
 
 
 const mapStateToProps = ({ indices, clusters }) => ({
@@ -183,7 +185,10 @@ class IndicesDashboard extends React.Component {
                 />
             </div>
 
-            {this.renderTable()}
+            <Switch>
+                <Route path={`${this.props.match.path}$`} render={this.renderTable} />
+                <Route path={`${this.props.match.path}/:indexName`} component={IndexDetails} />
+            </Switch>
         </div>;
     }
 }
