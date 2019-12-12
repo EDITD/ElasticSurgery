@@ -14,18 +14,20 @@ const mapDispatchToProps = {
     putSetting,
 }
 
-class NewSettingsModalInner extends React.Component {
+class SettingsModalInner extends React.Component {
     static propTypes = {
         type: PropTypes.oneOf(['persistent', 'transient']).isRequired,
         onClose: PropTypes.func.isRequired,
         putSetting: PropTypes.func.isRequired,
-        open: PropTypes.bool.isRequired,
     }
 
-    state = {
-        setting: '',
-        value: '',
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            setting: props.setting || '',
+            value: props.value || '',
+        };
+    }
 
     handleSubmit = () => {
         const { setting, value } = this.state;
@@ -55,15 +57,25 @@ class NewSettingsModalInner extends React.Component {
             }}>
                 <Grid container direction="column" justify="flex-start" alignItems="flex-start" spacing={4}>
                     <Grid item>
-                        <Typography variant="h6">New {this.props.type} setting</Typography>
+                        <Typography variant="h6">{this.props.action} {this.props.type} setting</Typography>
                     </Grid>
                     <Grid item style={{width: '100%'}}>
                         <Grid container direction="row" justify="space-between" alignItems="flex-end">
                             <Grid item style={{width: '48%'}}>
-                                <TextField value={this.state.setting} label="Setting" onChange={this.createStateUpdate('setting')} fullWidth={true} />
+                                <TextField
+                                    value={this.state.setting}
+                                    label="Setting"
+                                    onChange={this.createStateUpdate('setting')}
+                                    fullWidth={true}
+                                />
                             </Grid>
                             <Grid item style={{width: '48%'}}>
-                                <TextField value={this.state.value} label="Value" onChange={this.createStateUpdate('value')} fullWidth={true} />
+                                <TextField
+                                    value={this.state.value}
+                                    label="Value"
+                                    onChange={this.createStateUpdate('value')}
+                                    fullWidth={true}
+                                />
                             </Grid>
                         </Grid>
                     </Grid>
@@ -77,26 +89,28 @@ class NewSettingsModalInner extends React.Component {
         </Modal>
     }
 }
-const NewSettingsModal = connect(null, mapDispatchToProps)(NewSettingsModalInner);
+const SettingsModal = connect(null, mapDispatchToProps)(SettingsModalInner);
+
 
 const SettingsTable = ({ name, settings, settingsType, onEditCell }) => {
     const [modalOpen, setModalOpen] = React.useState(false);
+    const [modalData, setModalData] = React.useState({});
+    const [modalAction, setModalAction] = React.useState('New');
 
-    const handleOpenModal = () => {
+    const handleOpenModal = (modalData) => {
+        if (modalData) {
+            setModalData(modalData);
+            setModalAction('Update');
+        } else {
+            setModalAction('New');
+        }
+
         setModalOpen(true);
     };
 
     const handleModalClose = () => {
         setModalOpen(false);
-    };
-
-    const handleCellEdit = (rowData, changedDataKey, newValue, oldValue) => {
-        onEditCell({
-            rowData,
-            changedDataKey,
-            newValue,
-            oldValue,
-        });
+        setModalData({});
     };
 
     const renderRowEditButton = (data) => {
@@ -107,6 +121,7 @@ const SettingsTable = ({ name, settings, settingsType, onEditCell }) => {
                         <Button
                             variant="contained"
                             color="primary"
+                            onClick={() => handleOpenModal(data)}
                         >Edit</Button>
                     }
                 />
@@ -145,20 +160,32 @@ const SettingsTable = ({ name, settings, settingsType, onEditCell }) => {
         },
     ];
 
+    let settingsModal = null;
+    if (modalOpen) {
+        settingsModal = <SettingsModal
+            type={settingsType}
+            onClose={handleModalClose}
+            action={modalAction}
+            setting={modalData.setting}
+            value={modalData.value}
+            open={true}
+        />;
+    }
+
     return <Grid container direction="column" alignItems="flex-start" justify="flex-start" style={{height: '100%'}}>
         <Grid container direction="row" alignItems="center" justify="space-between">
             <Grid item>
                 <Typography variant="h5">{name}</Typography>
             </Grid>
             <Grid item>
-                <IconButton onClick={handleOpenModal}>
+                <IconButton onClick={() => handleOpenModal()}>
                     <AddBoxIcon />
                 </IconButton>
-                <NewSettingsModal type={settingsType} onClose={handleModalClose} open={modalOpen} />
+                {settingsModal}
             </Grid>
         </Grid>
         <Grid item style={{height: 'calc(100% - 48px)', width: '100%'}}>
-            {!!settings.length && <Table config={tableConfig} data={settings} onCellEdit={handleCellEdit} />}
+            {!!settings.length && <Table config={tableConfig} data={settings} />}
             {!settings.length && <Typography type="body1">No settings applied</Typography>}
         </Grid>
     </Grid>
