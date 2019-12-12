@@ -10,6 +10,8 @@ export function reducer(state, action) {
             ...initialState,
         };
     }
+    const newState = {...state};
+    let index = null;
 
     switch(action.type) {
         case NODE_ACTION_TYPES.LOAD_INDICES:
@@ -30,6 +32,38 @@ export function reducer(state, action) {
                 loadingState: 'ERROR',
                 error: action.error,
             };
+
+        case NODE_ACTION_TYPES.LOAD_INDEX_SETTINGS:
+            index = state.data.find(index => (index.index === action.indexName));
+
+            if (index) {
+                index.es_settings = {
+                    loadingState: 'LOADING',
+                    error: null,
+                };
+            }
+            return newState;
+        case NODE_ACTION_TYPES.LOAD_INDEX_SETTINGS_SUCCESS:
+            index = state.data.find(index => (index.index === action.indexName));
+
+            if (index) {
+                index.es_settings = {
+                    loadingState: 'LOADED',
+                    data: action.data,
+                };
+            }
+            return newState;
+        case NODE_ACTION_TYPES.LOAD_INDEX_SETTINGS_ERROR:
+            index = state.data.find(index => (index.index === action.indexName));
+
+            if (index) {
+                index.es_settings = {
+                    loadingState: 'ERROR',
+                    error: action.error,
+                };
+            }
+            return newState;
+
         default:
             return state;
     }
