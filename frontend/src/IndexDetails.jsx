@@ -14,7 +14,7 @@ class IndexDetails extends React.Component {
     render() {
         return (
             <div>
-                <h1>"Details"</h1>
+                <h1>Index Details</h1>
                 <h2>{this.props.index.index}</h2>
             </div>
         );

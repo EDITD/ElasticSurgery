@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 
 import {
     AppBar,
@@ -89,12 +89,6 @@ class App extends React.Component {
         },
     };
 
-    welcomeText() {
-        return <div>
-            "Welcome to ElasticSurgery"
-        </div>;
-    }
-
     render() {
         return (
             <Provider store={store}>
@@ -154,12 +148,14 @@ class App extends React.Component {
                             </div>
                         </Drawer>
                         <main style={this.styles.content}>
-                            {routes.map((route, index) => (
-                                <Route
-                                    key={index}
-                                    {...route}
-                                />
-                            ))}
+                            <Switch>
+                                {routes.map((route, index) => (
+                                    <Route
+                                        key={index}
+                                        {...route}
+                                    />
+                                ))}
+                            </Switch>
                         </main>
                     </div>
                 </Router>
