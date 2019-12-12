@@ -216,6 +216,14 @@ class SettingsDashboard extends React.Component {
         this.props.putSetting(settingType, setting, value);
     };
 
+    renderAnyPutError() {
+        const { settings } = this.props;
+
+        if (settings.puttingState === 'ERROR') {
+            return <p>Error writing settings: {settings.error.message}</p>;
+        }
+    }
+
     render() {
         const { settings } = this.props;
 
@@ -238,6 +246,7 @@ class SettingsDashboard extends React.Component {
         }
 
         return <div style={this.styles.wrapper}>
+            {this.renderAnyPutError()}
             <Grid container direction="column" alignItems="stretch" justify="space-between" spacing={4} style={{height: '100%'}}>
                 <Grid item style={{height: '50%'}}>
                     <SettingsTable name="Persistent" settings={this.getSettings('persistent')} settingsType='persistent' onEditCell={this.createCellEdit('persistent')} />
