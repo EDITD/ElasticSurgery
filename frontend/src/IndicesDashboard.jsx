@@ -159,6 +159,25 @@ class IndicesDashboard extends React.Component {
         </div>;
     };
 
+    renderIndices = () => {
+        return (
+            <div>
+                <div style={this.styles.controls}>
+                    <FormControlLabel
+                        control={
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={this.refreshIndices}
+                            >Refresh</Button>
+                        }
+                    />
+                </div>
+                {this.renderTable()}
+            </div>
+        );
+    };
+
     render() {
         const { indices, match } = this.props;
         if (isNotLoaded(indices) || isLoading(indices)) {
@@ -176,20 +195,8 @@ class IndicesDashboard extends React.Component {
         }
 
         return <div style={this.getContainerStyles(true)}>
-            <div style={this.styles.controls}>
-                <FormControlLabel
-                    control={
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={this.refreshIndices}
-                        >Refresh</Button>
-                    }
-                />
-            </div>
-
             <Switch>
-                <Route exact path={`${match.path}`} render={this.renderTable} />
+                <Route exact path={`${match.path}`} render={this.renderIndices} />
                 <Route path={`${match.path}/:indexName`} component={IndexDetails} />
             </Switch>
         </div>;
