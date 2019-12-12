@@ -16,7 +16,7 @@ import {
     isLoading,
     isNotLoaded,
 } from './data/utils';
-import Table from './Table';
+import Table, { LinkCell } from './Table';
 import IndexDetails from "./IndexDetails";
 
 
@@ -87,7 +87,7 @@ class IndicesDashboard extends React.Component {
     };
 
     renderTable = () => {
-        const { indices } = this.props;
+        const { indices, match } = this.props;
 
         const tableConfig = [
             {
@@ -96,6 +96,7 @@ class IndicesDashboard extends React.Component {
                 width: 300,
                 sortable: true,
                 searchable: true,
+                component: LinkCell,
             },
             {
                 title: 'Health',
@@ -148,6 +149,8 @@ class IndicesDashboard extends React.Component {
 
             index.store_size = index['store.size'];
             index.primary_store_size = index['pri.store.size'];
+
+            index.link_to = `${match.path}/${index.index}`;
             return index;
         });
 
