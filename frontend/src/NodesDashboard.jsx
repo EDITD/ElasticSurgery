@@ -13,7 +13,7 @@ const mapStateToProps = ({ nodes }) => ({
 
 const mapDispatchToProps = {
     loadNodes,
-}
+};
 
 class NodesDashboard extends React.Component {
     static propTypes = {

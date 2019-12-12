@@ -44,7 +44,7 @@ export function loadClusters() {
                 error,
             });
         }
-    }
+    };
 }
 
 export function addCluster(newClusterName, newClusterUrl) {
@@ -68,7 +68,7 @@ export function addCluster(newClusterName, newClusterUrl) {
                 data: data.data,
             });
         }
-    }
+    };
 }
 
 export function deleteCluster(clusterSlug) {
@@ -84,5 +84,5 @@ export function deleteCluster(clusterSlug) {
                 slug: data.slug,
             });
         }
-    }
+    };
 }

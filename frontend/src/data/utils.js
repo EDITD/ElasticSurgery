@@ -10,7 +10,7 @@ export const dataPropType = PropTypes.shape({
     loadingState: loadingStatePropType,
     data: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     error: PropTypes.object,
-}).isRequired
+}).isRequired;
 
 
 export function isLoading(store) {

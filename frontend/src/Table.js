@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { TableCell, TableSortLabel, InputBase } from '@material-ui/core';
 import { AutoSizer, Column, Table as VTable } from 'react-virtualized';
-import './Table.css'
+import './Table.css';
 
 function applySort(data, sortKey, sortDirection) {
     const comparitor = (a, b) => {
@@ -66,7 +66,7 @@ const EditableCell = ({ originalValue, onEdit }) => {
     const [editedValue, setEditedValue] = React.useState(originalValue);
     const handleChange = e => setEditedValue(e.target.value);
     const handleEditEnd = () => onEdit(editedValue, originalValue);
-    return <InputBase placeholder={originalValue} value={editedValue} onChange={handleChange} onBlur={handleEditEnd} />
+    return <InputBase placeholder={originalValue} value={editedValue} onChange={handleChange} onBlur={handleEditEnd} />;
 };
 
 export const LinkCell = ({cellData, rowData}) => {
@@ -139,7 +139,7 @@ export default class Table extends Component {
                 searchTerms,
             ),
         });
-    };
+    }
 
     createSortHandler = property => e => {
         const { orderBy, orderDirection } = this.state;
@@ -186,7 +186,7 @@ export default class Table extends Component {
                     }
                 }}
             />}
-        </TableCell>
+        </TableCell>;
     };
 
     createEditHandler = (config, index) => (newValue, oldValue) => {
@@ -249,6 +249,6 @@ export default class Table extends Component {
                 })}
             </VTable>
         }
-        </AutoSizer>
+        </AutoSizer>;
     }
 }

@@ -35,7 +35,7 @@ export function loadSettings() {
                 error,
             });
         }
-    }
+    };
 }
 
 export function putSetting(settingType, setting, value) {

@@ -30,7 +30,7 @@ const mapStateToProps = ({ tasks, nodes, clusters }) => ({
 const mapDispatchToProps = {
     loadTasks,
     loadNodes,
-}
+};
 
 const generateTaskTableData = (taskDatas, includeChildren) => {
     return taskDatas.reduce((rows, taskData) => {
@@ -52,7 +52,7 @@ const generateTaskTableData = (taskDatas, includeChildren) => {
             ...childRows,
         ];
     }, []);
-}
+};
 
 
 class TasksDashboard extends React.Component {
@@ -80,11 +80,11 @@ class TasksDashboard extends React.Component {
             marginLeft: 30,
             marginTop: 20,
         },
-    }
+    };
 
     state = {
         showChildren: false,
-    }
+    };
 
     componentDidMount() {
         const { tasks, clusters, nodes } = this.props;
@@ -120,13 +120,13 @@ class TasksDashboard extends React.Component {
 
     refreshTasks = () => {
         this.props.loadTasks();
-    }
+    };
 
     toggleShowChildren = () => {
         this.setState({
             showChildren: !this.state.showChildren,
         });
-    }
+    };
 
     render() {
         const { tasks, nodes } = this.props;

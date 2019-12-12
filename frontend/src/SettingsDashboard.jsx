@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Button, CircularProgress, IconButton, Grid, TextField, Typography, Modal } from '@material-ui/core';
-import AddBoxIcon from '@material-ui/icons/AddBox'
+import AddBoxIcon from '@material-ui/icons/AddBox';
 import { loadSettings, putSetting } from './data/settings/actions';
 import { isLoaded, isLoading, isNotLoaded, isErrored } from './data/utils';
 import Table from './Table.js';
@@ -11,7 +11,7 @@ const mapStateToProps = ({ clusters, settings }) => ({ clusters, settings });
 const mapDispatchToProps = {
     loadSettings,
     putSetting,
-}
+};
 
 class NewSettingsModalInner extends React.Component {
     static propTypes = {
@@ -19,7 +19,7 @@ class NewSettingsModalInner extends React.Component {
         onClose: PropTypes.func.isRequired,
         putSetting: PropTypes.func.isRequired,
         open: PropTypes.bool.isRequired,
-    }
+    };
 
     state = {
         setting: '',
@@ -36,7 +36,7 @@ class NewSettingsModalInner extends React.Component {
         this.setState({
             [property]: e.target.value,
         });
-    }
+    };
 
     render() {
         return <Modal
@@ -72,7 +72,7 @@ class NewSettingsModalInner extends React.Component {
                     </Grid>
                 </Grid>
             </div>
-        </Modal>
+        </Modal>;
     }
 }
 const NewSettingsModal = connect(null, mapDispatchToProps)(NewSettingsModalInner);
@@ -132,8 +132,8 @@ const SettingsTable = ({ name, settings, settingsType, onEditCell }) => {
             {!!settings.length && <Table config={tableConfig} data={settings} onCellEdit={handleCellEdit} />}
             {!settings.length && <Typography type="body1">No settings applied</Typography>}
         </Grid>
-    </Grid>
-}
+    </Grid>;
+};
 
 
 class SettingsDashboard extends React.Component {
@@ -174,7 +174,7 @@ class SettingsDashboard extends React.Component {
         return Object.entries(settings.data[settingsType]).reduce((settingsArray, [setting, value]) => {
             settingsArray.push({ setting, value });
             return settingsArray;
-        }, [])
+        }, []);
     };
 
     createCellEdit = settingType => ({
@@ -217,7 +217,7 @@ class SettingsDashboard extends React.Component {
                     <SettingsTable name="Transient" settings={this.getSettings('transient')} settingsType='transient' onEditCell={this.createCellEdit('transient')} />
                 </Grid>
             </Grid>
-        </div>
+        </div>;
     }
 }
 
