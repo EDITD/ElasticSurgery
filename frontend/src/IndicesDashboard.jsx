@@ -157,7 +157,7 @@ class IndicesDashboard extends React.Component {
     };
 
     render() {
-        const { indices } = this.props;
+        const { indices, match } = this.props;
         if (isNotLoaded(indices) || isLoading(indices)) {
             return <div style={this.getContainerStyles()}>
                 <CircularProgress />
@@ -186,8 +186,8 @@ class IndicesDashboard extends React.Component {
             </div>
 
             <Switch>
-                <Route path={`${this.props.match.path}$`} render={this.renderTable} />
-                <Route path={`${this.props.match.path}/:indexName`} component={IndexDetails} />
+                <Route exact path={`${match.path}`} render={this.renderTable} />
+                <Route path={`${match.path}/:indexName`} component={IndexDetails} />
             </Switch>
         </div>;
     }
