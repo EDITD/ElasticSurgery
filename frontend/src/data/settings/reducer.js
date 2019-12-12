@@ -30,6 +30,7 @@ export function reducer(state, action) {
                 loadingState: 'ERROR',
                 error: action.error,
             };
+
         case SETTING_ACTION_TYPES.PUT_SETTING:
             return {
                 ...state,
@@ -37,8 +38,6 @@ export function reducer(state, action) {
                 error: null,
             };
         case SETTING_ACTION_TYPES.PUT_SETTING_SUCCESS:
-            console.log(state, action);
-
             return {
                 ...state,
                 puttingState: 'LOADED',
@@ -54,6 +53,28 @@ export function reducer(state, action) {
             return {
                 ...state,
                 puttingState: 'ERROR',
+                error: action.error,
+            };
+
+        case SETTING_ACTION_TYPES.DELETE_SETTING:
+            return {
+                ...state,
+                deletingState: 'LOADING',
+                error: null,
+            };
+        case SETTING_ACTION_TYPES.DELETE_SETTING_SUCCESS:
+            delete state.data[action.settingType][action.setting];
+            return {
+                ...state,
+                deletingState: 'LOADED',
+                data: {
+                    ...state.data,
+                },
+            };
+        case SETTING_ACTION_TYPES.DELETE_SETTING_ERROR:
+            return {
+                ...state,
+                deletingState: 'ERROR',
                 error: action.error,
             };
         default:
