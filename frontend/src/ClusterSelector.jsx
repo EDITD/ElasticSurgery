@@ -56,7 +56,7 @@ class ClusterSelector extends React.Component {
             >
                 {clusterOptions.map(({ slug, name }) => <MenuItem value={slug} key={slug}>{name}</MenuItem>)}
             </Select>
-        </FormControl>
+        </FormControl>;
     }
 }
 

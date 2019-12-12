@@ -4,12 +4,13 @@ from elasticsurgery.settings import ES_LOGS_INDEX_NAME
 from elasticsurgery.utils.elastic import get_state_es_client
 
 
-def create_log(type_, data):
+def create_log(type_, cluster_slug, data):
     es_client = get_state_es_client()
     es_client.index(
         index=ES_LOGS_INDEX_NAME,
         body={
             'type': type_,
+            'cluster_slug': cluster_slug,
             'data': data,
             'datetime_utc': datetime.utcnow(),
         },

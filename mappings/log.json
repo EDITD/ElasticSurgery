@@ -5,6 +5,9 @@
             "type": {
                 "type": "keyword"
             },
+            "cluster_slug": {
+                "type": "keyword"
+            },
             "data": {
                 "type": "object",
                 "index": false

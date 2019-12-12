@@ -32,5 +32,5 @@ export function loadIndices() {
                 error,
             });
         }
-    }
+    };
 }

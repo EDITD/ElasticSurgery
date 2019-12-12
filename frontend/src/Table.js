@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { TableCell, TableSortLabel, InputBase } from '@material-ui/core';
 import { AutoSizer, Column, Table as VTable } from 'react-virtualized';
-import './Table.css'
+import './Table.css';
 
 function applySort(data, sortKey, sortDirection) {
     const comparitor = (a, b) => {
@@ -66,7 +66,11 @@ const EditableCell = ({ originalValue, onEdit }) => {
     const [editedValue, setEditedValue] = React.useState(originalValue);
     const handleChange = e => setEditedValue(e.target.value);
     const handleEditEnd = () => onEdit(editedValue, originalValue);
-    return <InputBase placeholder={originalValue} value={editedValue} onChange={handleChange} onBlur={handleEditEnd} />
+    return <InputBase placeholder={originalValue} value={editedValue} onChange={handleChange} onBlur={handleEditEnd} />;
+};
+
+export const LinkCell = ({cellData, rowData}) => {
+        return <a href={rowData.link_to}>{cellData}</a>;
 };
 
 export default class Table extends Component {
@@ -80,6 +84,7 @@ export default class Table extends Component {
             editable: PropTypes.bool,
             width: PropTypes.number,
             flexGrow: PropTypes.number,
+            component: PropTypes.element
         })).isRequired,
         onCellEdit: PropTypes.func,
         data: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -134,7 +139,7 @@ export default class Table extends Component {
                 searchTerms,
             ),
         });
-    };
+    }
 
     createSortHandler = property => e => {
         const { orderBy, orderDirection } = this.state;
@@ -181,17 +186,22 @@ export default class Table extends Component {
                     }
                 }}
             />}
-        </TableCell>
+        </TableCell>;
     };
 
     createEditHandler = (config, index) => (newValue, oldValue) => {
         this.props.onCellEdit(this.getRowData({ index }), config.dataKey, newValue, oldValue);
     };
 
-    cellRenderer = ({ rowIndex, cellData, style, config }) => {
-        if (config.renderFunction) {
-            const rowData = this.getRowData({ index: rowIndex });
-            return config.renderFunction(rowData);
+    cellRenderer = ({ rowIndex, cellData, style, config, ...otherArgs }) => {
+        const Component = config.component;
+        if (Component) {
+            return <TableCell
+                variant="body"
+                style={style}
+            >
+                <Component {...{ cellData, rowIndex, ...otherArgs }} />
+            </TableCell>;
         }
 
         if (!config.editable) {
@@ -207,7 +217,6 @@ export default class Table extends Component {
         return <TableCell
                     variant="body"
                     style={style}
-                    component="div"
                 >
                     <EditableCell originalValue={cellData} onEdit={this.createEditHandler(config, rowIndex)} />
                 </TableCell>;
@@ -240,6 +249,6 @@ export default class Table extends Component {
                 })}
             </VTable>
         }
-        </AutoSizer>
+        </AutoSizer>;
     }
 }

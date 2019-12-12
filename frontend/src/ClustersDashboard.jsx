@@ -22,7 +22,7 @@ const mapStateToProps = ({ clusters }) => ({
 const mapDispatchToProps = {
     addCluster,
     deleteCluster,
-}
+};
 
 class ClustersDashboard extends React.Component {
     static propTypes = {
@@ -32,12 +32,12 @@ class ClustersDashboard extends React.Component {
         }).isRequired,
         addCluster: PropTypes.func.isRequired,
         deleteCluster: PropTypes.func.isRequired,
-    }
+    };
 
     state = {
         newClusterName: '',
         newClusterUrl: '',
-    }
+    };
 
     addNewCluster = () => {
         this.props.addCluster(this.state.newClusterName, this.state.newClusterUrl);
@@ -45,7 +45,7 @@ class ClustersDashboard extends React.Component {
             newClusterName: '',
             newClusterUrl: '',
         });
-    }
+    };
 
     render() {
         const { clusters } = this.props;

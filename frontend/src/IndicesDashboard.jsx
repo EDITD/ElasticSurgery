@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Switch, Route } from "react-router-dom";
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
@@ -15,7 +16,8 @@ import {
     isLoading,
     isNotLoaded,
 } from './data/utils';
-import Table from './Table';
+import Table, { LinkCell } from './Table';
+import IndexDetails from "./IndexDetails";
 
 
 const mapStateToProps = ({ indices, clusters }) => ({
@@ -25,7 +27,7 @@ const mapStateToProps = ({ indices, clusters }) => ({
 
 const mapDispatchToProps = {
     loadIndices,
-}
+};
 
 
 class IndicesDashboard extends React.Component {
@@ -51,7 +53,7 @@ class IndicesDashboard extends React.Component {
             marginLeft: 30,
             marginTop: 20,
         },
-    }
+    };
 
     componentDidMount() {
         const { indices, clusters } = this.props;
@@ -82,23 +84,10 @@ class IndicesDashboard extends React.Component {
 
     refreshIndices = () => {
         this.props.loadIndices();
-    }
+    };
 
-    render() {
-        const { indices } = this.props;
-        if (isNotLoaded(indices) || isLoading(indices)) {
-            return <div style={this.getContainerStyles()}>
-                <CircularProgress />
-            </div>;
-        }
-
-        if (isErrored(indices)) {
-            return <div style={this.getContainerStyles()}>
-                <Typography variant="body1" component="p">
-                    An error occurred loading the current status
-                </Typography>
-            </div>;
-        }
+    renderTable = () => {
+        const { indices, match } = this.props;
 
         const tableConfig = [
             {
@@ -107,6 +96,7 @@ class IndicesDashboard extends React.Component {
                 width: 300,
                 sortable: true,
                 searchable: true,
+                component: LinkCell,
             },
             {
                 title: 'Health',
@@ -159,8 +149,31 @@ class IndicesDashboard extends React.Component {
 
             index.store_size = index['store.size'];
             index.primary_store_size = index['pri.store.size'];
+
+            index.link_to = `${match.path}/${index.index}`;
             return index;
         });
+
+        return <div style={this.styles.tableWrapper}>
+            <Table config={tableConfig} data={tableData}/>
+        </div>;
+    };
+
+    render() {
+        const { indices, match } = this.props;
+        if (isNotLoaded(indices) || isLoading(indices)) {
+            return <div style={this.getContainerStyles()}>
+                <CircularProgress />
+            </div>;
+        }
+
+        if (isErrored(indices)) {
+            return <div style={this.getContainerStyles()}>
+                <Typography variant="body1" component="p">
+                    An error occurred loading the current status
+                </Typography>
+            </div>;
+        }
 
         return <div style={this.getContainerStyles(true)}>
             <div style={this.styles.controls}>
@@ -175,9 +188,10 @@ class IndicesDashboard extends React.Component {
                 />
             </div>
 
-            <div style={this.styles.tableWrapper}>
-                <Table config={tableConfig} data={tableData} />
-            </div>
+            <Switch>
+                <Route exact path={`${match.path}`} render={this.renderTable} />
+                <Route path={`${match.path}/:indexName`} component={IndexDetails} />
+            </Switch>
         </div>;
     }
 }

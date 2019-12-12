@@ -1,7 +1,7 @@
 from flask import jsonify
 
 from elasticsurgery.app import app
-from elasticsurgery.utils.elastic import pass_cluster_client
+from elasticsurgery.utils.elastic import get_cluster_client, pass_cluster_client
 from elasticsurgery.utils.log import create_log
 from elasticsurgery.utils.request import get_request_data
 
@@ -28,14 +28,14 @@ def get_cluster_settings(cluster_client):
 
 
 @app.route('/api/clusters/<cluster_slug>/settings', methods=('PUT',))
-@pass_cluster_client
-def put_cluster_settings(cluster_client):
+def put_cluster_settings(cluster_slug):
     settings = get_request_data()
+    cluster_client = get_cluster_client(cluster_slug)
     new_settings = cluster_client.cluster.put_settings(
         body=settings,
         flat_settings=True,
     )
-    create_log('update_cluster_settings', settings)
+    create_log('update_cluster_settings', cluster_slug, settings)
     return jsonify(**new_settings)
 
 
