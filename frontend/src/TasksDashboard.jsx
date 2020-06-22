@@ -7,6 +7,8 @@ import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import pretty from 'pretty-time';
 
 import { loadTasks } from './data/tasks/actions';
@@ -102,6 +104,7 @@ class TasksDashboard extends React.Component {
     state = {
         showChildren: false,
         tasksFilter: '',
+        refreshInterval: 0,
     };
 
     componentDidMount() {
@@ -119,10 +122,23 @@ class TasksDashboard extends React.Component {
         }
     }
 
-    componentDidUpdate(prevProps) {
+    componentWillUnmount() {
+        if (this.refreshIntervalTimer) {
+            clearInterval(this.refreshIntervalTimer);
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
         if (prevProps.clusters.currentCluster !== this.props.clusters.currentCluster) {
             this.props.loadNodes();
             this.props.loadTasks();
+        }
+
+        if (prevState.refreshInterval !== this.state.refreshInterval) {
+            this.refreshIntervalTimer = setInterval(
+                this.props.loadTasks,
+                this.state.refreshInterval * 1000,
+            );
         }
     }
 
@@ -214,6 +230,7 @@ class TasksDashboard extends React.Component {
         return <div style={this.getContainerStyles(true)}>
             <div style={this.styles.controls}>
                 <FormControlLabel
+                    style={{marginRight: 40}}
                     control={
                         <Button
                             variant="contained"
@@ -223,6 +240,22 @@ class TasksDashboard extends React.Component {
                     }
                 />
                 <FormControlLabel
+                    style={{marginRight: 20}}
+                    label="Refresh interval"
+                    control={
+                        <Select
+                            value={this.state.refreshInterval}
+                            onChange={(ev) => this.setState({refreshInterval: ev.target.value})}
+                        >
+                            <MenuItem value={0}>Disabled</MenuItem>
+                            <MenuItem value={10}>10s</MenuItem>
+                            <MenuItem value={30}>30s</MenuItem>
+                            <MenuItem value={60}>60s</MenuItem>
+                        </Select>
+                    }
+                />
+                <FormControlLabel
+                    style={{marginRight: 40}}
                     control={
                         <Checkbox
                             value={this.state.showChildren}
