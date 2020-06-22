@@ -188,18 +188,30 @@ class TasksDashboard extends React.Component {
             {
                 title: 'ID',
                 dataKey: 'id',
-                width: 300,
+                width: 100,
                 sortable: true,
             },
             {
                 title: 'Type',
                 dataKey: 'type',
-                width: 300,
+                width: 100,
                 sortable: true,
             },
             {
                 title: 'Action',
                 dataKey: 'action',
+                width: 300,
+                sortable: true,
+            },
+            {
+                title: 'Description',
+                dataKey: 'description',
+                width: 500,
+                sortable: true,
+            },
+            {
+                title: 'Status',
+                dataKey: 'status_string',
                 width: 500,
                 sortable: true,
             },
