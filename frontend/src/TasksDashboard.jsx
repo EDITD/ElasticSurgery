@@ -123,9 +123,7 @@ class TasksDashboard extends React.Component {
     }
 
     componentWillUnmount() {
-        if (this.refreshIntervalTimer) {
-            clearInterval(this.refreshIntervalTimer);
-        }
+        this.clearAnyRefreshInterval();
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -135,10 +133,19 @@ class TasksDashboard extends React.Component {
         }
 
         if (prevState.refreshInterval !== this.state.refreshInterval) {
-            this.refreshIntervalTimer = setInterval(
-                this.props.loadTasks,
-                this.state.refreshInterval * 1000,
-            );
+            this.clearAnyRefreshInterval();
+            if (this.state.refreshInterval) {
+                this.refreshIntervalTimer = setInterval(
+                    this.props.loadTasks,
+                    this.state.refreshInterval * 1000,
+                );
+            }
+        }
+    }
+
+    clearAnyRefreshInterval() {
+        if (this.refreshIntervalTimer) {
+            clearInterval(this.refreshIntervalTimer);
         }
     }
 
