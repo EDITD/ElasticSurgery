@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import pretty from 'pretty-time';
 
@@ -30,6 +31,22 @@ const mapStateToProps = ({ tasks, nodes, clusters }) => ({
 const mapDispatchToProps = {
     loadTasks,
     loadNodes,
+};
+
+const filterTaskTableData = (taskDatas, tasksFilter) => {
+    if (!tasksFilter) {
+        return taskDatas;
+    }
+
+    return taskDatas.filter(taskData => {
+        if (taskData.action.indexOf(tasksFilter) > 0) {
+            return true;
+        }
+        if (taskData.type.indexOf(tasksFilter) > 0) {
+            return true;
+        }
+        return false;
+    });
 };
 
 const generateTaskTableData = (taskDatas, includeChildren) => {
@@ -84,6 +101,7 @@ class TasksDashboard extends React.Component {
 
     state = {
         showChildren: false,
+        tasksFilter: '',
     };
 
     componentDidMount() {
@@ -150,28 +168,24 @@ class TasksDashboard extends React.Component {
                 dataKey: 'id',
                 width: 300,
                 sortable: true,
-                searchable: true,
             },
             {
                 title: 'Type',
                 dataKey: 'type',
                 width: 300,
                 sortable: true,
-                searchable: true,
             },
             {
                 title: 'Action',
                 dataKey: 'action',
                 width: 500,
                 sortable: true,
-                searchable: true,
             },
             {
                 title: 'Node',
                 dataKey: 'node',
                 width: 300,
                 sortable: true,
-                searchable: true,
                 formatter: nodeId => {
                     const nodeData = nodes.data.nodes[nodeId];
                     return nodeData ? nodeData.name : nodeId;
@@ -193,7 +207,7 @@ class TasksDashboard extends React.Component {
         ];
 
         const tableData = generateTaskTableData(
-            Object.values(tasks.data.tasks),
+            filterTaskTableData(Object.values(tasks.data.tasks), this.state.tasksFilter),
             this.state.showChildren,
         );
 
@@ -216,6 +230,15 @@ class TasksDashboard extends React.Component {
                         />
                     }
                     label="Show child tasks"
+                />
+                <FormControlLabel
+                    control={
+                        <TextField
+                            value={this.state.tasksFilter}
+                            onChange={(ev) => this.setState({tasksFilter: ev.target.value})}
+                        />
+                    }
+                    label="Filter tasks"
                 />
             </div>
 
