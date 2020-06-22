@@ -169,12 +169,11 @@ class TasksDashboard extends React.Component {
         });
     };
 
-    render() {
+    renderTable() {
         const { tasks, nodes } = this.props;
+
         if (isNotLoaded(tasks) || isLoading(tasks) || isNotLoaded(nodes) || isLoading(nodes)) {
-            return <div style={this.getContainerStyles()}>
-                <CircularProgress />
-            </div>;
+            return <CircularProgress />;
         }
 
         if (isErrored(tasks) || isErrored(nodes)) {
@@ -234,6 +233,10 @@ class TasksDashboard extends React.Component {
             this.state.showChildren,
         );
 
+        return <Table config={tableConfig} data={tableData} />;
+    }
+
+    render() {
         return <div style={this.getContainerStyles(true)}>
             <div style={this.styles.controls}>
                 <FormControlLabel
@@ -255,6 +258,7 @@ class TasksDashboard extends React.Component {
                             onChange={(ev) => this.setState({refreshInterval: ev.target.value})}
                         >
                             <MenuItem value={0}>Disabled</MenuItem>
+                            <MenuItem value={5}>5s</MenuItem>
                             <MenuItem value={10}>10s</MenuItem>
                             <MenuItem value={30}>30s</MenuItem>
                             <MenuItem value={60}>60s</MenuItem>
@@ -266,6 +270,7 @@ class TasksDashboard extends React.Component {
                     control={
                         <Checkbox
                             value={this.state.showChildren}
+                            checked={this.state.showChildren}
                             onClick={this.toggleShowChildren}
                         />
                     }
@@ -283,7 +288,7 @@ class TasksDashboard extends React.Component {
             </div>
 
             <div style={this.styles.tableWrapper}>
-                <Table config={tableConfig} data={tableData} />
+                {this.renderTable()}
             </div>
         </div>;
     }
