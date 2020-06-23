@@ -42,5 +42,24 @@ def put_cluster_settings(cluster_slug):
 @app.route('/api/clusters/<cluster_slug>/tasks', methods=('GET',))
 @pass_cluster_client
 def get_cluster_tasks(cluster_client):
-    tasks = cluster_client.tasks.list(group_by='parents')
-    return jsonify(**tasks)
+    tasks = cluster_client.tasks.list(group_by='parents', detailed=True)
+
+    def process_task(task):
+        if task['action'] == 'indices:data/write/reindex':
+            status = task['status']
+            percentage_complete = round((
+                (status['created'] + status['updated']) / status['total']
+                * 100
+            ), 2)
+            task['status_string'] = (
+                f'(created={status["created"]} + updated={status["updated"]})'
+                f'/{status["total"]} ({percentage_complete}%)'
+            )
+
+        return task
+
+    tasks = {
+        task_id: process_task(task)
+        for task_id, task in tasks['tasks'].items()
+    }
+    return jsonify(tasks=tasks)
