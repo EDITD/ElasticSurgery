@@ -9,7 +9,7 @@ containerContexts:
         - [rm, -rf, frontend/build/]  # remove any existing
         - [npm, --prefix, frontend/, prune]
         - [npm, --prefix, frontend/, install, --quiet]
-        - [npm, --prefix, frontend/, run build]
+        - [npm, --prefix, frontend/, run, build]
     dev:
       volumes:
         - ./:/opt/elasticsurgery
