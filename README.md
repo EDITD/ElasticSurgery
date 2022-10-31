@@ -4,7 +4,7 @@ ElasticSurgery is an Elastcsearch cluster _management interface_. Designed to vi
 
 ## Development
 
-Setup your environment like so - you'll need [`kubetools-client`](https://github.com/EDITD/kubetools-client) installed:
+Setup your environment like so - you'll need [`kubetools`](https://github.com/EDITD/kubetools) installed:
 
 ```sh
 # Install the node modules

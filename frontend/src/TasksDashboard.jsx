@@ -5,7 +5,10 @@ import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import pretty from 'pretty-time';
 
 import { loadTasks } from './data/tasks/actions';
@@ -30,6 +33,22 @@ const mapStateToProps = ({ tasks, nodes, clusters }) => ({
 const mapDispatchToProps = {
     loadTasks,
     loadNodes,
+};
+
+const filterTaskTableData = (taskDatas, tasksFilter) => {
+    if (!tasksFilter) {
+        return taskDatas;
+    }
+
+    return taskDatas.filter(taskData => {
+        if (taskData.action.indexOf(tasksFilter) > 0) {
+            return true;
+        }
+        if (taskData.type.indexOf(tasksFilter) > 0) {
+            return true;
+        }
+        return false;
+    });
 };
 
 const generateTaskTableData = (taskDatas, includeChildren) => {
@@ -84,6 +103,8 @@ class TasksDashboard extends React.Component {
 
     state = {
         showChildren: false,
+        tasksFilter: '',
+        refreshInterval: 0,
     };
 
     componentDidMount() {
@@ -101,10 +122,30 @@ class TasksDashboard extends React.Component {
         }
     }
 
-    componentDidUpdate(prevProps) {
+    componentWillUnmount() {
+        this.clearAnyRefreshInterval();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
         if (prevProps.clusters.currentCluster !== this.props.clusters.currentCluster) {
             this.props.loadNodes();
             this.props.loadTasks();
+        }
+
+        if (prevState.refreshInterval !== this.state.refreshInterval) {
+            this.clearAnyRefreshInterval();
+            if (this.state.refreshInterval) {
+                this.refreshIntervalTimer = setInterval(
+                    this.props.loadTasks,
+                    this.state.refreshInterval * 1000,
+                );
+            }
+        }
+    }
+
+    clearAnyRefreshInterval() {
+        if (this.refreshIntervalTimer) {
+            clearInterval(this.refreshIntervalTimer);
         }
     }
 
@@ -128,12 +169,11 @@ class TasksDashboard extends React.Component {
         });
     };
 
-    render() {
+    renderTable() {
         const { tasks, nodes } = this.props;
+
         if (isNotLoaded(tasks) || isLoading(tasks) || isNotLoaded(nodes) || isLoading(nodes)) {
-            return <div style={this.getContainerStyles()}>
-                <CircularProgress />
-            </div>;
+            return <CircularProgress />;
         }
 
         if (isErrored(tasks) || isErrored(nodes)) {
@@ -148,30 +188,38 @@ class TasksDashboard extends React.Component {
             {
                 title: 'ID',
                 dataKey: 'id',
-                width: 300,
+                width: 100,
                 sortable: true,
-                searchable: true,
             },
             {
                 title: 'Type',
                 dataKey: 'type',
-                width: 300,
+                width: 100,
                 sortable: true,
-                searchable: true,
             },
             {
                 title: 'Action',
                 dataKey: 'action',
+                width: 300,
+                sortable: true,
+            },
+            {
+                title: 'Description',
+                dataKey: 'description',
                 width: 500,
                 sortable: true,
-                searchable: true,
+            },
+            {
+                title: 'Status',
+                dataKey: 'status_string',
+                width: 500,
+                sortable: true,
             },
             {
                 title: 'Node',
                 dataKey: 'node',
                 width: 300,
                 sortable: true,
-                searchable: true,
                 formatter: nodeId => {
                     const nodeData = nodes.data.nodes[nodeId];
                     return nodeData ? nodeData.name : nodeId;
@@ -193,13 +241,18 @@ class TasksDashboard extends React.Component {
         ];
 
         const tableData = generateTaskTableData(
-            Object.values(tasks.data.tasks),
+            filterTaskTableData(Object.values(tasks.data.tasks), this.state.tasksFilter),
             this.state.showChildren,
         );
 
+        return <Table config={tableConfig} data={tableData} />;
+    }
+
+    render() {
         return <div style={this.getContainerStyles(true)}>
             <div style={this.styles.controls}>
                 <FormControlLabel
+                    style={{marginRight: 40}}
                     control={
                         <Button
                             variant="contained"
@@ -209,18 +262,45 @@ class TasksDashboard extends React.Component {
                     }
                 />
                 <FormControlLabel
+                    style={{marginRight: 20}}
+                    label="Refresh interval"
+                    control={
+                        <Select
+                            value={this.state.refreshInterval}
+                            onChange={(ev) => this.setState({refreshInterval: ev.target.value})}
+                        >
+                            <MenuItem value={0}>Disabled</MenuItem>
+                            <MenuItem value={5}>5s</MenuItem>
+                            <MenuItem value={10}>10s</MenuItem>
+                            <MenuItem value={30}>30s</MenuItem>
+                            <MenuItem value={60}>60s</MenuItem>
+                        </Select>
+                    }
+                />
+                <FormControlLabel
+                    style={{marginRight: 40}}
                     control={
                         <Checkbox
                             value={this.state.showChildren}
+                            checked={this.state.showChildren}
                             onClick={this.toggleShowChildren}
                         />
                     }
                     label="Show child tasks"
                 />
+                <FormControlLabel
+                    control={
+                        <TextField
+                            value={this.state.tasksFilter}
+                            onChange={(ev) => this.setState({tasksFilter: ev.target.value})}
+                        />
+                    }
+                    label="Filter tasks"
+                />
             </div>
 
             <div style={this.styles.tableWrapper}>
-                <Table config={tableConfig} data={tableData} />
+                {this.renderTable()}
             </div>
         </div>;
     }
