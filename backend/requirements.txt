@@ -4,5 +4,5 @@ flask-socketio==4.2.1
 uwsgi==2.0.18
 elasticsearch==7.0.4
 pydash==4.7.5
-ipython==7.8.0
+ipython==8.10.0
 python-slugify==4.0.0
